@@ -6,10 +6,12 @@ use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/product')]
 final class ProductController extends AbstractController
@@ -23,13 +25,33 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $image = $form->get('image')->getData();
+
+            if ($image) {
+                $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFileName = $slugger->slug($originalName);
+                $newFileName = $safeFileName . '-' . uniqid() . '.' . $image->guessExtension();
+
+                try {
+                    $image->move(
+                        $this->getParameter('images_dir'),
+                        $newFileName
+                    );
+                } catch (FileException $exception) {
+                    
+                }
+
+               
+                $product->setImage($newFileName);
+            }
+
             $entityManager->persist($product);
             $entityManager->flush();
 
@@ -53,12 +75,32 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $image = $form->get('image')->getData();
+
+            if ($image) {
+                $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFileName = $slugger->slug($originalName);
+                $newFileName = $safeFileName . '-' . uniqid() . '.' . $image->guessExtension();
+
+                try {
+                    $image->move(
+                        $this->getParameter('images_dir'),
+                        $newFileName
+                    );
+                } catch (FileException $exception) {
+                    
+                }
+
+                
+                $product->setImage($newFileName);
+            }
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Produit modifié avec succès !');
@@ -77,8 +119,9 @@ final class ProductController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($product);
-            $this->addFlash('danger', 'Produit supprimé avec succès !');
             $entityManager->flush();
+
+            $this->addFlash('danger', 'Produit supprimé avec succès !');
         }
 
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
