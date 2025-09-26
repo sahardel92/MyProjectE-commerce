@@ -20,9 +20,16 @@
             Administrateur  
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{ path('app_category')}}">Categories</a></li>
-            <li><a class="dropdown-item" href="{{ path('app_category_new')}}">New Category</a></li>
+            <li><a class="dropdown-item" href="{{ path('app_category')}}">Catégories</a></li>
+            <li><a class="dropdown-item" href="{{ path('app_category_new')}}">Ajouter une catégorie</a></li>
             <li><hr class="dropdown-divider"></li>
+            <a class="dropdown-item" href="{{ path('app_sub_category_index') }}">Sous-Catégories</a>
+            <li><a class="dropdown-item" href="{{ path('app_sub_category_new') }}">Créer une sous-catégorie</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{ path('app_product_index')}}">Produits</a></li>
+
+            
+
             <li><a class="dropdown-item" href="{{ path('app_user')}}">Utilisateurs</a></li>
           </ul>
         </li>
