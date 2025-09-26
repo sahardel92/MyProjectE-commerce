@@ -20,6 +20,8 @@ class SubCategory
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+    
+
     public function getId(): ?int
     {
         return $this->id;
