@@ -27,7 +27,36 @@ final class UserController extends AbstractController
         $user->setRoles(['ROLE_EDITOR', 'ROLE_USER']);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Rôle modifié avec succès !');
+        $this->addFlash('success', 'Le rôle de l\'éditeur a été ajouté à votre utilisateur avec succès !');
+
+        return $this->redirectToRoute('app_user');
+
+        
+        
+    }
+    #[Route('/admin/user/{id}/remove/editor', name: 'app_user_remove_editor')]
+    public function removeRole(EntityManagerInterface $entityManager, User $user): Response
+    {
+
+        $user->setRoles(['ROLE_USER']);
+        $entityManager->flush();
+
+        $this->addFlash('danger', 'Le rôle de l\'éditeur a été retiré de votre utilisateur avec succès !');
+
+        return $this->redirectToRoute('app_user');
+
+        
+        
+    }
+     #[Route('/admin/user/{id}/remove', name: 'app_user_remove')]
+    public function userremove(EntityManagerInterface $entityManager, $id, UserRepository $userRepository): Response
+    {
+
+        $userFind = $userRepository->find($id);
+        $entityManager->remove($userFind);
+        $entityManager->flush();
+
+        $this->addFlash('danger', 'L\'utilisateur a été supprimé avec succès !');
 
         return $this->redirectToRoute('app_user');
 
