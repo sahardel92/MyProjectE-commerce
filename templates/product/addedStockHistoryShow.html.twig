@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique d'ajout de stock{% endblock %}
+
+{% block body %}
+
+<div class="container"><br><br>
+    <h1>Historique d'ajout de stock pour {{ product.name }}</h1> <br><br>
+
+    {% include 'layouts/_flash_message.html.twig' %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Quantité ajoutée</th>
+                <th>Date d'ajout</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for history in productAddHistory %}
+                <tr>
+                    <td>{{ history.id }}</td>
+                    <td>{{ history.qte }}</td>
+                    <td>{{ history.createdAt|date('d-m-Y H:i:s') }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">Aucun historique d'ajout de stock trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}

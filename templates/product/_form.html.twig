@@ -12,6 +12,17 @@
     {{ form_widget(form.price, { 'attr': {'class': 'form-control'} }) }}
     {{ form_errors(form.price) }}
 
+  
+   
+
+   {% if button_label != 'Update' %}
+    {{ form_widget(form.stock, { 'attr': {'class': 'form-control'} }) }}
+    {{ form_errors(form.stock) }} <br>
+{% endif %}
+
+
+        
+
     <label for="">Sous-catégories</label>
     {{ form_widget(form.subCategories, { 'attr': {'class': 'form-control'} }) }}
     {{ form_errors(form.subCategories) }} <br>
