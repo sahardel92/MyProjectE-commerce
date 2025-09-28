@@ -43,6 +43,7 @@ class ProductType extends AbstractType
                 'class' => SubCategory::class,
                 'choice_label' => 'name',
                 'multiple' => true,
+                'expanded' => false,
             ])
         ;
     }

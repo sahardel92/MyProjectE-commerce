@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Controller;
 
 use App\Entity\AddProductHistory;
@@ -17,10 +18,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+//  Had fichier huwa controller li kayhandle CRUD dyal Product (affichage, ajout, modification, suppression, stock)
 
 #[Route('/editor/product')]
 final class ProductController extends AbstractController
 {
+    //  Affichage dial liste dial produits
     #[Route(name: 'app_product_index', methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
@@ -29,7 +32,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
-
+      // Création produit jdid
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
@@ -37,9 +40,12 @@ final class ProductController extends AbstractController
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
+
+         // Vérification formulaire
         if ($form->isSubmitted() && $form->isValid()) {
             $image = $form->get('image')->getData();
 
+            // Si kayna image kanuploadiwha b smiya unique
             if ($image) {
                 $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFileName = $slugger->slug($originalName);
@@ -51,17 +57,18 @@ final class ProductController extends AbstractController
                         $newFileName
                     );
                 } catch (FileException $exception) {
-                    
+                    //  Exception f upload (f had cas ma ndirou walou, n9dro nzido flash msg)
                 }
 
                
                 $product->setImage($newFileName);
             }
 
+            // Sauvegarde produit
             $entityManager->persist($product);
             $entityManager->flush();
 
-            
+            // Initialisation historique dyal stock
             $stockHistory = new AddProductHistory();
             $stockHistory->setQte($product->getStock());
             $stockHistory->setProduct($product);
@@ -70,6 +77,7 @@ final class ProductController extends AbstractController
             $entityManager->persist($stockHistory);
             $entityManager->flush();
 
+                //  Message succès
             $this->addFlash('success', 'Produit ajouté avec succès !');
 
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
@@ -81,6 +89,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
+     //  Affichage produit wahed
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
     public function show(Product $product): Response
     {
@@ -89,15 +98,18 @@ final class ProductController extends AbstractController
         ]);
     }
 
+     //  Modification produit
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
+
         $form = $this->createForm(ProductUpdateType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $image = $form->get('image')->getData();
 
+             // Vérification si image kayna
             if ($image) {
                 $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFileName = $slugger->slug($originalName);
@@ -109,6 +121,7 @@ final class ProductController extends AbstractController
                         $newFileName
                     );
                 } catch (FileException $exception) {
+                     //  Exception f upload
                     
                 }
 
@@ -116,6 +129,7 @@ final class ProductController extends AbstractController
                 $product->setImage($newFileName);
             }
 
+            // Sauvegarde modifications
             $entityManager->flush();
 
             $this->addFlash('success', 'Produit modifié avec succès !');
@@ -129,6 +143,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
+     // Suppression produit
     #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
@@ -142,6 +157,7 @@ final class ProductController extends AbstractController
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
     }
 
+      // Ajout stock jdida l produit
     #[Route('/add/product/{id}/stock', name: 'app_product_stock_add', methods: ['POST', 'GET'])]
     public function addStock($id, EntityManagerInterface $entityManager, Request $request, ProductRepository $productRepository): Response
     {
@@ -153,12 +169,13 @@ final class ProductController extends AbstractController
 
      if($form->isSubmitted() && $form->isValid()) {
 
+          // Vérification qte > 0
         if ($addStock->getQte() >0) {
 
             $newQte = $product->getStock() + $addStock->getQte();
             $product->setStock($newQte);
 
-           
+            // Sauvegarde historique
             $addStock->setCreatedAt(new \DateTimeImmutable());
             $addStock->setProduct($product);
             $entityManager->persist($addStock);
@@ -170,6 +187,8 @@ final class ProductController extends AbstractController
             return $this->redirectToRoute('app_product_index');
 
         }else{
+
+            // Si qte khassha tkon > 0
             $this->addFlash('danger', 'Le stock doit être positif !');
             return $this->redirectToRoute('app_product_stock_add', ['id' => $product->getId()]);
 
@@ -182,6 +201,7 @@ final class ProductController extends AbstractController
     }
 
 
+    // Affichage historique dial stock ajouté
     #[Route('/add/product/{id}/stock/history', name: 'app_product_stock_add_history', methods: ['GET'])]
 
     public function productAddHistory($id, ProductRepository $productRepository, AddProductHistoryRepository $addProductHistoryRepository): Response

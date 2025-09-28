@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - LilyShop{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <div class="card mb-12">
+    <div class="row g-0">
+        <div class="col-md-4">
+        <img src="{{ asset('uploads/images/' ~ product.image) }}"  class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+        <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text">{{ product.description }}</p>
+            <a href="" class="text-success"> Ajouter au panier</a>
+             <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+        </div>
+        </div>
+    </div>
+    </div>
+
+  
+</div>
+{% endblock %}
