@@ -10,6 +10,7 @@ use App\Form\AddProductHistoryType;
 use App\Form\ProductUpdateType;
 use App\Repository\AddProductHistoryRepository;
 use App\Repository\ProductRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+
 
 //  Had fichier huwa controller li kayhandle CRUD dyal Product (affichage, ajout, modification, suppression, stock)
 
@@ -100,7 +102,13 @@ final class ProductController extends AbstractController
 
      //  Modification produit
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function edit(
+                Request $request, 
+                Product $product, 
+                EntityManagerInterface $entityManager, 
+                SluggerInterface $slugger,
+                CategoryRepository $categoryRepository
+                ): Response
     {
 
         $form = $this->createForm(ProductUpdateType::class, $product);
@@ -140,6 +148,7 @@ final class ProductController extends AbstractController
         return $this->render('product/edit.html.twig', [
             'product' => $product,
             'form' => $form,
+            'categories' => $categoryRepository->findAll(),
         ]);
     }
 

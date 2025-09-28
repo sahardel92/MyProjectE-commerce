@@ -1,47 +1,73 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
   <div class="container">
     <a class="navbar-brand" href="#">LilyShop</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+      aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarScroll">
+      <!-- Menu principal -->
       <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
+
+        {% if categories is defined %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Catégories
+            </a>
+            <ul class="dropdown-menu">
+              {% for category in categories %}
+                <li>
+                  <a class="dropdown-item text-success fw-bold" href="#">{{ category.name }}</a>
+                </li>
+                {% for subCategory in category.subCategories %}
+                  <li>
+                    <a class="dropdown-item" href="{{ path('app_home_product_filter', {'id': subCategory.id }) }}">
+                      {{ subCategory.name }}
+                    </a>
+                  </li>
+                {% endfor %}
+                <li><hr class="dropdown-divider"></li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% endif %}
 
         {% if is_granted('ROLE_ADMIN') %}
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Administrateur  
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{ path('app_category')}}">Catégories</a></li>
-            <li><a class="dropdown-item" href="{{ path('app_category_new')}}">Ajouter une catégorie</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <a class="dropdown-item" href="{{ path('app_sub_category_index') }}">Sous-Catégories</a>
-            <li><a class="dropdown-item" href="{{ path('app_sub_category_new') }}">Créer une sous-catégorie</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{{ path('app_product_index')}}">Produits</a></li>
-
-            
-
-            <li><a class="dropdown-item" href="{{ path('app_user')}}">Utilisateurs</a></li>
-          </ul>
-        </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Administrateur
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{{ path('app_category')}}">Catégories</a></li>
+              <li><a class="dropdown-item" href="{{ path('app_category_new')}}">Ajouter une catégorie</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{ path('app_sub_category_index') }}">Sous-Catégories</a></li>
+              <li><a class="dropdown-item" href="{{ path('app_sub_category_new') }}">Créer une sous-catégorie</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{ path('app_product_index')}}">Produits</a></li>
+              <li><a class="dropdown-item" href="{{ path('app_user')}}">Utilisateurs</a></li>
+            </ul>
+          </li>
         {% endif %}
-        
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Link</a>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Search</button>
+      </ul> 
+      
+      {% if not app.user %}
+        <div class="d-flex me-3">
+          <a href="{{ path('app_register') }}" class="btn btn-outline-light me-2">S’inscrire</a>
+          <a href="{{ path('app_login') }}" class="btn btn-success">Se connecter</a>
+        </div>
+      {% endif %}
+
+     
+      <form class="d-flex ms-lg-auto" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="max-width: 200px;"/>
+        <button class="btn btn-outline-success" type="submit">
+          <i class="bi bi-search">Search</i>
+        </button>
       </form>
     </div>
   </div>
