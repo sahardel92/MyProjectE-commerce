@@ -1,5 +1,61 @@
+{# templates/cart/index.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Panier - LilyShop{% endblock %}
 
+{% block body %}
+<div class="container my-4">
+  <h1 class="mb-3">Mon panier</h1>
 
+  <div class="table-responsive">
+    <table class="table table-bordered align-middle">
+      <thead>
+        <tr>
+          <th>Produit</th>
+          <th>Prix unitaire</th>
+          <th>Quantité</th>
+          <th>Total</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.product.price|number_format(2, '.', ',') }} €</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ (item.product.price * item.quantity)|number_format(2, '.', ',') }} €</td>
+            <td>
+              <a
+                href="{{ path('app_cart_product_remove', {'id': item.product.id}) }}"
+                class="btn btn-outline-danger btn-sm"
+                title="Supprimer l'article"
+              >
+                Supprimer
+              </a>
+            </td>
+          </tr>
+        {% else %}
+          
+          <tr>
+            <td colspan="5" class="text-center">Votre panier est vide</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if total > 0 %}
+    <div class="d-flex flex-wrap gap-2 align-items-center mt-3">
+   
+      <a href="" class="btn btn-success">Valider mon panier</a>
+      <a href="{{ path('app_cart_remove') }}" class="btn btn-danger">Vider mon panier</a>
+    </div>
+
+    <h3 class="mt-4">
+      Total du panier : {{ total|number_format(2, '.', ',') }} €
+    </h3>
+  {% endif %}
+</div>
+{% endblock %}

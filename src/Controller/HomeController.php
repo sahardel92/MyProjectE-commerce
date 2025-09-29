@@ -56,4 +56,6 @@ public function filter($id, SubCategoryRepository $subCategoryRepository, Catego
         'categories' => $categoryRepository->findAll(),
     ]);
 }
+
+
 }
