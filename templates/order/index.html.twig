@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row">
+        <!-- Formulaire -->
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4">
+                <h2 class="mb-4">Informations de livraison</h2>
+
+                {{ form_start(form) }}
+                    <div class="row g-3">
+                        {{ form_widget(form) }}
+                    </div>
+
+                    <div class="mt-4 text-end">
+                        <button type="submit" class="btn btn-primary">
+                            Continuer
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+
+        <!-- Résumé commande -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-4">
+                <h4 class="mb-3">Résumé</h4>
+                <p>Produits : <strong>{{ total }} €</strong></p>
+                <p><span class="text-muted">Frais de livraison</span></p>
+                <hr>
+                <p class="fs-5">
+                    Total à payer : 
+                    <strong>{{ total }} €</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
