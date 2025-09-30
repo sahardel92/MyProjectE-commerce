@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Entity\City;
 
 final class OrderController extends AbstractController
 {
@@ -40,4 +41,14 @@ final class OrderController extends AbstractController
             'total' => $total,
         ]);
     }
+
+        #[Route('/city/{id}/shipping/cost', name: 'app_city_shipping_cost', methods: ['GET'] )]
+        public function cityShippingCost(City $city):Response
+        {
+
+            $cityShippingPrice = $city->getShippingCost();
+
+            return new Response(json_encode(['status' => 200, 'message' => 'on', 'content' => $cityShippingPrice]));
+            
+        }
 }

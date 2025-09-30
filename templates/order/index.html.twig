@@ -28,15 +28,71 @@
         <div class="col-md-4">
             <div class="card shadow-sm p-4">
                 <h4 class="mb-3">Résumé</h4>
-                <p>Produits : <strong>{{ total }} €</strong></p>
-                <p><span class="text-muted">Frais de livraison</span></p>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Produits</span>
+                    <strong id="product-total">{{ total }} €</strong>
+                </div>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Frais de livraison</span>
+                    <span id="shipping-cost" class="text-muted">--</span>
+                </div>
+
                 <hr>
-                <p class="fs-5">
-                    Total à payer : 
-                    <strong>{{ total }} €</strong>
-                </p>
+
+                <div class="d-flex justify-content-between fs-5">
+                    <span>Total à payer</span>
+                    <strong id="grand-total">{{ total }} €</strong>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" 
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
+        crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function() {
+        const citySelector = $('#order_city');
+        const productTotal = parseFloat("{{ total }}"); // total des produits
+
+        // Fonction pour calculer et afficher les frais de livraison
+        function updateShipping(cityValue) {
+            const url = `http://localhost:8000/city/${cityValue}/shipping/cost`;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(response) {
+                    const newResponse = JSON.parse(response);
+
+                    if (parseInt(newResponse.status) === 200) {
+                        const shippingCost = parseFloat(newResponse.content);
+
+                        // Affichage frais de livraison
+                        $('#shipping-cost').text(`${shippingCost.toFixed(2)} €`);
+
+                        // Mise à jour du total final
+                        const grandTotal = productTotal + shippingCost;
+                        $('#grand-total').text(`${grandTotal.toFixed(2)} €`);
+                    }
+                },
+                error: function() {
+                    $('#shipping-cost').text('Erreur...');
+                }
+            });
+        }
+
+        // Charger au démarrage (ville par défaut)
+        updateShipping(citySelector.val());
+
+        // Quand on change de ville
+        citySelector.on('change', function() {
+            updateShipping($(this).val());
+        });
+    });
+</script>
 {% endblock %}
