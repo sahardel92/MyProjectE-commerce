@@ -12,6 +12,8 @@ use App\Repository\CategoryRepository;
 use App\Repository\SubCategoryRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Review;
 
 final class HomeController extends AbstractController
 {
@@ -33,16 +35,27 @@ final class HomeController extends AbstractController
 
 
     #[Route('/home/product/{id}/show', name: 'app_home_product_show', methods: ['GET'] )]
-    public function show(Product $product, ProductRepository $productRepository, CategoryRepository $categoryRepository): Response
-    {
-        $lastProducts = $productRepository->findBy([], ['id' => 'DESC'], 5);
+public function show(
+    Product $product, 
+    ProductRepository $productRepository, 
+    CategoryRepository $categoryRepository,
+    EntityManagerInterface $em
+): Response {
+    $lastProducts = $productRepository->findBy([], ['id' => 'DESC'], 5);
 
-        return $this->render('home/show.html.twig', [
+    // 🔥 Récupérer les avis liés à ce produit
+    $reviews = $em->getRepository(Review::class)->findBy(
+        ['product' => $product],
+        ['createdAt' => 'DESC']
+    );
+
+    return $this->render('home/show.html.twig', [
         'product' => $product,
         'products' => $lastProducts,
-        'categories' => $categoryRepository->findAll(), 
-        ]);
-    }
+        'categories' => $categoryRepository->findAll(),
+        'reviews' => $reviews, // ✅ passer à Twig
+    ]);
+}
 
     #[Route('/home/product/subcategory/{id}/filter', name: 'app_home_product_filter', methods: ['GET'] )]
 public function filter($id, SubCategoryRepository $subCategoryRepository, CategoryRepository $categoryRepository): Response

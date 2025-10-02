@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Laisser un avis{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h2>Laisser un avis pour {{ product.name }}</h2>
+
+        {{ form_start(form) }}
+            <div class="mb-3">
+                {{ form_label(form.rating, 'Votre note') }}
+                {{ form_widget(form.rating) }}
+                {{ form_errors(form.rating) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.content, 'Votre avis') }}
+                {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 5}}) }}
+                {{ form_errors(form.content) }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Envoyer l'avis</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

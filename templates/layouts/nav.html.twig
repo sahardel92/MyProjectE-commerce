@@ -1,18 +1,25 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
   <div class="container">
-    <a class="navbar-brand" href="#">LilyShop</a>
+
+    <!-- Logo -->
+    <a class="navbar-brand" href="{{ path('app_home') }}">LilyShop</a>
+
+    <!-- Bouton mobile -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
       aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarScroll">
+
       <!-- Menu principal -->
       <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+        <!-- Home -->
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Home</a>
         </li>
 
+        <!-- Dropdown Catégories -->
         {% if categories is defined %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -36,6 +43,7 @@
           </li>
         {% endif %}
 
+        <!-- Menu Administrateur -->
         {% if is_granted('ROLE_ADMIN') %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -54,7 +62,16 @@
           </li>
         {% endif %}
       </ul> 
-      
+
+      <!-- Barre de recherche centrée -->
+      <form class="d-flex mx-auto" role="search" style="width: 400px;">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+        <button class="btn btn-outline-success" type="submit">
+          <i class="bi bi-search"></i>
+        </button>
+      </form>
+
+      <!-- Boutons login/register si user pas connecté -->
       {% if not app.user %}
         <div class="d-flex me-3">
           <a href="{{ path('app_register') }}" class="btn btn-outline-light me-2">S’inscrire</a>
@@ -62,13 +79,25 @@
         </div>
       {% endif %}
 
-     
-      <form class="d-flex ms-lg-auto" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="max-width: 200px;"/>
-        <button class="btn btn-outline-success" type="submit">
-          <i class="bi bi-search">Search</i>
-        </button>
-      </form>
+      <!-- Retours & Panier -->
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item me-4">
+          <a class="nav-link" href="{{ path('app_order') }}">
+            Retours <br><strong>et commandes</strong>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-cart" href="{{ path('app_cart') }}">
+            <i class="fas fa-shopping-cart"></i>
+            Panier
+            <span class="badge bg-warning text-dark">
+              {{ app.session.get('cart') is defined ? app.session.get('cart')|length : 0 }}
+            </span>
+          </a>
+        </li>
+      </ul>
+
     </div>
   </div>
 </nav>
+

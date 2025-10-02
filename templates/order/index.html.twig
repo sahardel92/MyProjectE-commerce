@@ -1,98 +1,127 @@
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Checkout{% endblock %}
+{% block title %}Checkout - LilyShop{% endblock %}
 
 {% block body %}
 <div class="container my-5">
-    <div class="row">
-        <!-- Formulaire -->
-        <div class="col-md-8">
-            <div class="card shadow-sm p-4">
-                <h2 class="mb-4">Informations de livraison</h2>
+  <div class="row">
+    <!-- 📝 Formulaire livraison -->
+    <div class="col-md-8">
+      <div class="card shadow-sm p-4">
+        <h2 class="mb-4">📦 Informations de livraison</h2>
 
-                {{ form_start(form) }}
-                    <div class="row g-3">
-                        {{ form_widget(form) }}
-                    </div>
+        {{ form_start(form) }}
+          <div class="row g-3">
+            {{ form_widget(form) }}
+          </div>
 
-                    <div class="mt-4 text-end">
-                        <button type="submit" class="btn btn-primary">
-                            Continuer
-                        </button>
-                    </div>
-                {{ form_end(form) }}
-            </div>
-        </div>
-
-        <!-- Résumé commande -->
-        <div class="col-md-4">
-            <div class="card shadow-sm p-4">
-                <h4 class="mb-3">Résumé</h4>
-
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Produits</span>
-                    <strong id="product-total">{{ total }} €</strong>
-                </div>
-
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Frais de livraison</span>
-                    <span id="shipping-cost" class="text-muted">--</span>
-                </div>
-
-                <hr>
-
-                <div class="d-flex justify-content-between fs-5">
-                    <span>Total à payer</span>
-                    <strong id="grand-total">{{ total }} €</strong>
-                </div>
-            </div>
-        </div>
+          <div class="mt-4 text-end">
+            <button type="submit" class="btn btn-primary btn-lg">
+              ✅ Continuer
+            </button>
+          </div>
+        {{ form_end(form) }}
+      </div>
     </div>
+
+    <!-- 📊 Résumé -->
+    <div class="col-md-4">
+      <div class="card shadow-sm p-4">
+        <h4 class="mb-3">🧾 Résumé</h4>
+
+        <div class="d-flex justify-content-between mb-2">
+          <span>Produits</span>
+          <strong id="product-total">{{ total }} €</strong>
+        </div>
+
+        <div class="d-flex justify-content-between mb-2">
+          <span>Frais de livraison</span>
+          <span id="shipping-cost" class="text-muted">--</span>
+        </div>
+
+        <hr>
+
+        <div class="d-flex justify-content-between fs-5">
+          <span>Total à payer</span>
+          <strong id="grand-total" class="text-success">{{ total }} €</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⭐ Suggestions produits -->
+  <div class="row mt-5">
+    <h3 class="mb-4">🔥 Produits que vous pourriez aimer</h3>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <img src="https://via.placeholder.com/200" class="card-img-top" alt="Produit 1">
+        <div class="card-body text-center">
+          <h6 class="card-title">Produit Exemple 1</h6>
+          <p class="text-success fw-bold">29,99 €</p>
+          <a href="#" class="btn btn-outline-primary btn-sm">Ajouter au panier</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <img src="https://via.placeholder.com/200" class="card-img-top" alt="Produit 2">
+        <div class="card-body text-center">
+          <h6 class="card-title">Produit Exemple 2</h6>
+          <p class="text-success fw-bold">49,99 €</p>
+          <a href="#" class="btn btn-outline-primary btn-sm">Ajouter au panier</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <img src="https://via.placeholder.com/200" class="card-img-top" alt="Produit 2">
+        <div class="card-body text-center">
+          <h6 class="card-title">Produit Exemple 3</h6>
+          <p class="text-success fw-bold">30,99 €</p>
+          <a href="#" class="btn btn-outline-primary btn-sm">Ajouter au panier</a>
+        </div>
+      </div>
+    </div>
+    <!-- tu peux dupliquer encore selon besoin -->
+  </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" 
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
-        crossorigin="anonymous"></script>
-
 <script>
-    $(document).ready(function() {
-        const citySelector = $('#order_city');
-        const productTotal = parseFloat("{{ total }}"); // total des produits
+  // ⚡ Script sans jQuery -> Fetch API
+  document.addEventListener("DOMContentLoaded", () => {
+    const citySelector = document.querySelector("#order_city");
+    const productTotal = parseFloat("{{ total }}");
+    const shippingCostEl = document.getElementById("shipping-cost");
+    const grandTotalEl = document.getElementById("grand-total");
 
-        // Fonction pour calculer et afficher les frais de livraison
-        function updateShipping(cityValue) {
-            const url = `http://localhost:8000/city/${cityValue}/shipping/cost`;
+    async function updateShipping(cityId) {
+      try {
+        const response = await fetch(`/city/${cityId}/shipping/cost`);
+        const data = await response.json();
 
-            $.ajax({
-                url: url,
-                type: 'GET',
-                success: function(response) {
-                    const newResponse = JSON.parse(response);
+        if (data.status === 200) {
+          const shipping = parseFloat(data.content);
 
-                    if (parseInt(newResponse.status) === 200) {
-                        const shippingCost = parseFloat(newResponse.content);
-
-                        // Affichage frais de livraison
-                        $('#shipping-cost').text(`${shippingCost.toFixed(2)} €`);
-
-                        // Mise à jour du total final
-                        const grandTotal = productTotal + shippingCost;
-                        $('#grand-total').text(`${grandTotal.toFixed(2)}git push €`);
-                    }
-                },
-                error: function() {
-                    $('#shipping-cost').text('Erreur...');
-                }
-            });
+          shippingCostEl.textContent = `${shipping.toFixed(2)} €`;
+          grandTotalEl.textContent = `${(productTotal + shipping).toFixed(2)} €`;
         }
+      } catch (error) {
+        shippingCostEl.textContent = "Erreur...";
+      }
+    }
 
-        // Charger au démarrage (ville par défaut)
-        updateShipping(citySelector.val());
+    // Charger par défaut
+    if (citySelector) {
+      updateShipping(citySelector.value);
 
-        // Quand on change de ville
-        citySelector.on('change', function() {
-            updateShipping($(this).val());
-        });
-    });
+      citySelector.addEventListener("change", (e) => {
+        updateShipping(e.target.value);
+      });
+    }
+  });
 </script>
 {% endblock %}
+

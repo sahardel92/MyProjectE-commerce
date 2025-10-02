@@ -5,48 +5,101 @@
 {% block body %}
 <div class="container">
 
+        {# had l'card kat affichi details dial produit #}
+
     <div class="card mb-12" style="margin-top: 100px;">
-    <div class="row g-0">
-        <div class="col-md-4">
-        <img src="{{ asset('uploads/images/' ~ product.image) }}"  class="img-fluid rounded-start" alt="...">
-        </div>
-        <div class="col-md-8">
-        <div class="card-body">
-            <h5 class="card-title text-primary">{{ product.name }}</h5>
-            <p class="card-text">{{ product.description }}</p>
-            <h3 class="text-success">{{ product.price }} €</h3>
-            <a href="" class="text-success"> Ajouter au panier</a>
-           
-        </div>
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="{{ asset('uploads/images/' ~ product.image) }}" class="img-fluid rounded-start" alt="{{ product.name }}">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                  {# smiya dial produit #}
+                    <h5 class="card-title text-primary">{{ product.name }}</h5>
+                      {# description dial produit #}
+                    <p class="card-text">{{ product.description }}</p>
+                    {# thaman dial produit #}
+                    <h3 class="text-success">{{ product.price }} €</h3>
+
+                    {# lien bach tzid produit f panier #}
+                    <a href="" class="text-success"> Ajouter au panier</a>
+                </div>
+            </div>
         </div>
     </div>
-    </div>
+
+    <hr class="my-4">
+
+
+    <hr class="my-4">
+        {# section dial avis dial clients #}
+
+<h3>Avis des clients</h3>
+
+{% if reviews is not empty %}
+    {% for review in reviews %}
+        <div class="card mb-3">
+            <div class="card-body">
+            {# smiya dial client li ktb review #}
+
+                <strong>{{ review.user.firstName }} {{ review.user.lastName }}</strong>
+                {# notation b njoum ⭐ #}
+                <span class="text-warning">
+                    {% for i in 1..review.rating %}
+                        ⭐
+                    {% endfor %}
+                </span>
+                {# contenu dial review #}
+                <p>{{ review.content }}</p>
+                {# date w wa9t fayn tkteb #}
+
+                <small class="text-muted">Publié le {{ review.createdAt|date('d/m/Y H:i') }}</small>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>Aucun avis pour ce produit. Soyez le premier à en écrire un !</p>
+{% endif %}
+
+
+    <hr class="my-4">
+    {# section dial derniers produits ajoutés #}
 
     <h2>Derniers produits ajoutés</h2>
 
-     <div class="row g-4">
+    <div class="row g-4">
         {% for product in products %}
             <div class="col-md-3">
                 <div class="card h-100 shadow-sm border-0">
-                    
-                    {# Image produit #}
+
+            {# sora dial produit #}
+
                     <img src="{{ asset('uploads/images/' ~ product.image) }}" 
                          class="card-img-top p-3 bg-light"
                          alt="{{ product.name }}"
                          style="height: 200px; object-fit: contain;">
 
                     <div class="card-body d-flex flex-column">
-                        <a style="text-decoration: none; " href="{{ path('app_home_product_show', { id: product.id }) }}">
-                        <h5 class="card-title">{{ product.name }}</h5></a>
+                    {# lien bach tmchi l page dial produit #}
+
+                        <a style="text-decoration: none;" href="{{ path('app_home_product_show', { id: product.id }) }}">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                        </a>
+                        {# description sghira (resume) #}
                         <p class="card-text text-muted small">
                             {{ product.description|slice(0, 50) }}...
                         </p>
+                        {# thaman dial produit #}
                         <p class="fw-bold text-success mb-3">{{ product.price }} €</p>
-                        <a href="{{ path('app_cart_new', { id: product.id }) }}" class="btn btn-success mt-auto w-100">Ajouter au panier</a>
+                        {# bouton bach tzid produit f panier #}
+                        <a href="{{ path('app_cart_add', { 'id': product.id }) }}" class="btn btn-success mt-auto w-100">🛒 Ajouter au panier
+                    </a>
+
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
+
 </div>
 {% endblock %}

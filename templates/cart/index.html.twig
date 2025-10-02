@@ -1,61 +1,108 @@
-{# templates/cart/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Panier - LilyShop{% endblock %}
+{% block title %}Mon Panier - LilyShop{% endblock %}
 
 {% block body %}
 <div class="container my-4">
-  <h1 class="mb-3">Mon panier</h1>
+  <h1 class="mb-4">🛍️ Mon panier</h1>
 
-  <div class="table-responsive">
-    <table class="table table-bordered align-middle">
-      <thead>
-        <tr>
-          <th>Produit</th>
-          <th>Prix unitaire</th>
-          <th>Quantité</th>
-          <th>Total</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
+  <div class="row">
+    <!-- ==================== Partie gauche : tableau produits ==================== -->
+    <div class="col-md-8">
+      <div class="table-responsive">
+        <table class="table table-striped align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Produit</th>
+              <th>Prix unitaire</th>
+              <th>Quantité</th>
+              <th>Total</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+              <tr>
+                <!-- 📌 Nom produit -->
+                <td>
+                  <strong>{{ item.product.name }}</strong><br>
+                  <small class="text-muted">
+                    {{ item.product.description|slice(0, 40) ~ '...' }}
+                  </small>
+                </td>
 
-      <tbody>
-        {% for item in items %}
-          <tr>
-            <td>{{ item.product.name }}</td>
-            <td>{{ item.product.price|number_format(2, '.', ',') }} €</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ (item.product.price * item.quantity)|number_format(2, '.', ',') }} €</td>
-            <td>
-              <a
-                href="{{ path('app_cart_product_remove', {'id': item.product.id}) }}"
-                class="btn btn-outline-danger btn-sm"
-                title="Supprimer l'article"
-              >
-                Supprimer
-              </a>
-            </td>
-          </tr>
-        {% else %}
-          
-          <tr>
-            <td colspan="5" class="text-center">Votre panier est vide</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+                <!-- 💰 Prix unitaire -->
+                <td>{{ item.product.price|number_format(2, ',', ' ') }} €</td>
 
-  {% if total > 0 %}
-    <div class="d-flex flex-wrap gap-2 align-items-center mt-3">
-   
-      <a href="" class="btn btn-success">Valider mon panier</a>
-      <a href="{{ path('app_cart_remove') }}" class="btn btn-danger">Vider mon panier</a>
+                <!-- 🔢 Contrôle quantité (+ et -) -->
+                <td>
+                  <div class="d-flex align-items-center">
+                    <!-- bouton ➖ -->
+                    <a href="{{ path('app_cart_decrease', {'id': item.product.id}) }}" 
+                       class="btn btn-outline-secondary btn-sm me-2">➖</a>
+
+                    <span class="fw-bold">{{ item.quantity }}</span>
+
+                    <!-- bouton ➕ -->
+                    <a href="{{ path('app_cart_add', {'id': item.product.id}) }}" 
+                       class="btn btn-outline-secondary btn-sm ms-2">➕</a>
+                  </div>
+                </td>
+
+                <!-- 🧾 Total de la ligne -->
+                <td>
+                  <strong>
+                    {{ (item.product.price * item.quantity)|number_format(2, ',', ' ') }} €
+                  </strong>
+                </td>
+
+                <!-- 🗑️ Supprimer -->
+                <td>
+                  <a href="{{ path('app_cart_product_remove', {'id': item.product.id}) }}" 
+                     class="btn btn-danger btn-sm">
+                    🗑️ Supprimer
+                  </a>
+                </td>
+              </tr>
+            {% else %}
+              <!-- 🕳️ Si panier vide -->
+              <tr>
+                <td colspan="5" class="text-center text-muted">
+                  Votre panier est vide 😢
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <h3 class="mt-4">
-      Total du panier : {{ total|number_format(2, '.', ',') }} €
-    </h3>
-  {% endif %}
+    <!-- ==================== Partie droite : résumé ==================== -->
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">📦 Résumé</h5>
+
+          <!-- 🧮 Compter les articles -->
+          {% set totalArticles = 0 %}
+          {% for item in items %}
+            {% set totalArticles = totalArticles + item.quantity %}
+          {% endfor %}
+
+          <p>Sous-total ({{ totalArticles }} article{{ totalArticles > 1 ? 's' : '' }})</p>
+          <h4 class="fw-bold text-success">
+            {{ totalProduits|number_format(2, ',', ' ') }} €
+          </h4>
+
+          <hr>
+
+          <!-- Boutons d’actions -->
+         <a href="{{ path('app_order') }}" class="btn btn-warning w-100 mb-2">✅ Passer la commande</a>
+          <a href="{{ path('app_home') }}" class="btn btn-outline-secondary w-100">🛒 Continuer mes achats</a>
+          <a href="{{ path('app_cart_remove') }}" class="btn btn-danger w-100 mt-2">🗑️ Vider mon panier</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
