@@ -23,14 +23,15 @@ final class HomeController extends AbstractController
         Request $request, 
         PaginatorInterface $paginator
     ): Response {
-
+         // hna kanjib tous les produits men DB triés b id DESC (jdidin lwlin)
         $data = $productRepository->findBy([], ['id' => 'DESC']);
+        // hna kandir pagination : 10 produits par page
         $products = $paginator->paginate(
             $data,
             $request->query->getInt('page', 1),
             10
         );
-
+        // hna kan afficher page home/index.html.twig m3a les produits et categories
         return $this->render('home/index.html.twig', [
             'products' => $products,
             'categories' => $categoryRepository->findAll(),
@@ -44,14 +45,15 @@ final class HomeController extends AbstractController
         CategoryRepository $categoryRepository,
         EntityManagerInterface $em
     ): Response {
+        // hna kanjib 5 produits jdadin bach n'afficher "dernier produits"
         $lastProducts = $productRepository->findBy([], ['id' => 'DESC'], 5);
 
-        // 🔥 Récupérer les avis liés à ce produit
+        // 🔥 hna kanjib reviews (avis) li 3and had produit, triés par date DESC
         $reviews = $em->getRepository(Review::class)->findBy(
             ['product' => $product],
             ['createdAt' => 'DESC']
         );
-
+         // hna kan afficher show.html.twig m3a produit + dernier produits + categories + avis
         return $this->render('home/show.html.twig', [
             'product' => $product,
             'products' => $lastProducts,
@@ -66,9 +68,11 @@ final class HomeController extends AbstractController
         SubCategoryRepository $subCategoryRepository, 
         CategoryRepository $categoryRepository
     ): Response {
+        // hna kanjib tous les produits li kaynin f had subCategory
         $products = $subCategoryRepository->find($id)->getProducts();
+        // hna kanjib l'objet subCategory b id
         $subCategory = $subCategoryRepository->find($id);
-
+        // afficher filter.html.twig m3a produits, subCategory et categories
         return $this->render('home/filter.html.twig', [
             'products'   => $products,
             'subCategory'=> $subCategory,

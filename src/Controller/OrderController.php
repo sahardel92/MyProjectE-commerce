@@ -24,30 +24,30 @@ final class OrderController extends AbstractController
         ProductRepository $productRepository,
         CityRepository $cityRepository // 👉 pour récupérer les villes
     ): Response {
-        // 🛒 récupérer panier mn session
+        //  hna kanjib panier men session
         $cart = $session->get('cart', []);
         $cartWithData = [];
-
+        // hna kan7awl panier bach ndiro liste produits + quantité
         foreach ($cart as $id => $quantity) {
             $cartWithData[] = [
-                'product' => $productRepository->find($id),
-                'quantity' => $quantity
+                'product' => $productRepository->find($id),// produit men DB
+                'quantity' => $quantity  // quantité
             ];
         }
 
-        // 💰 calculer total dial produits
+        // hna kan calculer total dial prix dial panier
         $total = array_sum(array_map(function($item) {
             return $item['product']->getPrice() * $item['quantity'];
         }, $cartWithData));
 
-        // 🏙️ récupérer toutes les villes pour afficher f <select>
+        // hna kanjib toutes les villes (bach n'afficher f <select>
         $cities = $cityRepository->findAll();
 
-        // 📋 création formulaire commande
+        // création dial formulaire dial commande
         $order = new Order();
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
-
+        //afficher la vue order/index.html.twig m3a data
         return $this->render('order/index.html.twig', [
             'form'   => $form->createView(),
             'items'  => $cartWithData,
@@ -59,10 +59,10 @@ final class OrderController extends AbstractController
     #[Route('/city/{id}/shipping/cost', name: 'app_city_shipping_cost', methods: ['GET'] )]
     public function cityShippingCost(City $city): JsonResponse
     {
-        // 💸 récupérer frais livraison dial had la ville
+        // hna kanjib frais livraison dial had la ville
         $cityShippingPrice = $city->getShippingCost();
 
-        // ✅ retourner réponse JSON propre
+        // kanrja3 réponse JSON bach ajax yesta3melha
         return new JsonResponse([
             'status'  => 200,
             'message' => 'ok',
@@ -72,10 +72,10 @@ final class OrderController extends AbstractController
     #[Route('/order/confirm', name: 'app_order_confirm')]
 public function confirm(SessionInterface $session): Response
 {
-    // 🧹 vider le panier après paiement
+    //  vider panier men session ba3d paiement
     $session->set('cart', []);
 
-    // ✅ afficher une page de confirmation
+    // afficher une page de confirmation
     return $this->render('order/confirm.html.twig');
 }
 }
