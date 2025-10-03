@@ -25,6 +25,21 @@ class Product
 
     #[ORM\Column]
     private ?int $price = null;
+    
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $promo = null;
+
+    public function getPromo(): ?float
+    {
+    return $this->promo;
+    }
+
+    public function setPromo(?float $promo): static
+{
+    $this->promo = $promo;
+    return $this;
+}
 
     /**
      * @var Collection<int, SubCategory>

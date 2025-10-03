@@ -1,4 +1,3 @@
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Checkout - LilyShop{% endblock %}
@@ -22,17 +21,30 @@
             </button>
           </div>
         {{ form_end(form) }}
+
+        <!-- 🛒 Détail des articles -->
+        <h4 class="mt-5">🛒 Vos articles</h4>
+        <ul class="list-group mb-3">
+          {% for item in items %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {{ item.product.name }} (x{{ item.quantity }})
+              <span>{{ (item.product.price * item.quantity)|number_format(2, ',', ' ') }} €</span>
+            </li>
+          {% else %}
+            <li class="list-group-item text-muted">Votre panier est vide.</li>
+          {% endfor %}
+        </ul>
       </div>
     </div>
 
-    <!-- 📊 Résumé -->
+    <!-- 📊 Résumé commande -->
     <div class="col-md-4">
       <div class="card shadow-sm p-4">
         <h4 class="mb-3">🧾 Résumé</h4>
 
         <div class="d-flex justify-content-between mb-2">
           <span>Produits</span>
-          <strong id="product-total">{{ total }} €</strong>
+          <strong id="product-total">{{ total|number_format(2, ',', ' ') }} €</strong>
         </div>
 
         <div class="d-flex justify-content-between mb-2">
@@ -44,84 +56,81 @@
 
         <div class="d-flex justify-content-between fs-5">
           <span>Total à payer</span>
-          <strong id="grand-total" class="text-success">{{ total }} €</strong>
+          <strong id="grand-total" class="text-success">{{ total|number_format(2, ',', ' ') }} €</strong>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- ⭐ Suggestions produits -->
-  <div class="row mt-5">
-    <h3 class="mb-4">🔥 Produits que vous pourriez aimer</h3>
+        <hr>
 
-    <div class="col-md-3">
-      <div class="card shadow-sm">
-        <img src="https://via.placeholder.com/200" class="card-img-top" alt="Produit 1">
-        <div class="card-body text-center">
-          <h6 class="card-title">Produit Exemple 1</h6>
-          <p class="text-success fw-bold">29,99 €</p>
-          <a href="#" class="btn btn-outline-primary btn-sm">Ajouter au panier</a>
-        </div>
+        <!-- 💳 Paiement PayPal -->
+        <div id="paypal-button-container"></div>
       </div>
     </div>
-
-    <div class="col-md-3">
-      <div class="card shadow-sm">
-        <img src="https://via.placeholder.com/200" class="card-img-top" alt="Produit 2">
-        <div class="card-body text-center">
-          <h6 class="card-title">Produit Exemple 2</h6>
-          <p class="text-success fw-bold">49,99 €</p>
-          <a href="#" class="btn btn-outline-primary btn-sm">Ajouter au panier</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card shadow-sm">
-        <img src="https://via.placeholder.com/200" class="card-img-top" alt="Produit 2">
-        <div class="card-body text-center">
-          <h6 class="card-title">Produit Exemple 3</h6>
-          <p class="text-success fw-bold">30,99 €</p>
-          <a href="#" class="btn btn-outline-primary btn-sm">Ajouter au panier</a>
-        </div>
-      </div>
-    </div>
-    <!-- tu peux dupliquer encore selon besoin -->
   </div>
 </div>
+{% endblock %}
 
-<script>
-  // ⚡ Script sans jQuery -> Fetch API
-  document.addEventListener("DOMContentLoaded", () => {
-    const citySelector = document.querySelector("#order_city");
-    const productTotal = parseFloat("{{ total }}");
-    const shippingCostEl = document.getElementById("shipping-cost");
-    const grandTotalEl = document.getElementById("grand-total");
+{% block javascripts %}
+  {{ parent() }}
 
-    async function updateShipping(cityId) {
-      try {
-        const response = await fetch(`/city/${cityId}/shipping/cost`);
-        const data = await response.json();
+  <!-- ⚡ Script livraison dynamique -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const citySelector = document.querySelector("#order_city");
+      const productTotal = parseFloat("{{ total }}");
+      const shippingCostEl = document.getElementById("shipping-cost");
+      const grandTotalEl = document.getElementById("grand-total");
 
-        if (data.status === 200) {
-          const shipping = parseFloat(data.content);
+      async function updateShipping(cityId) {
+        try {
+          const response = await fetch(`/city/${cityId}/shipping/cost`);
+          const data = await response.json();
 
-          shippingCostEl.textContent = `${shipping.toFixed(2)} €`;
-          grandTotalEl.textContent = `${(productTotal + shipping).toFixed(2)} €`;
+          if (data.status === 200) {
+            const shipping = parseFloat(data.content);
+            shippingCostEl.textContent = `${shipping.toFixed(2)} €`;
+            grandTotalEl.textContent = `${(productTotal + shipping).toFixed(2)} €`;
+          }
+        } catch (error) {
+          shippingCostEl.textContent = "Erreur...";
         }
-      } catch (error) {
-        shippingCostEl.textContent = "Erreur...";
       }
-    }
 
-    // Charger par défaut
-    if (citySelector) {
-      updateShipping(citySelector.value);
+      if (citySelector) {
+        updateShipping(citySelector.value);
+        citySelector.addEventListener("change", (e) => updateShipping(e.target.value));
+      }
+    });
+  </script>
 
-      citySelector.addEventListener("change", (e) => {
-        updateShipping(e.target.value);
-      });
-    }
-  });
-</script>
+  <!-- ⚡ Script PayPal (Client ID inséré) -->
+  <script src="https://www.paypal.com/sdk/js?client-id=ARIlNMxxayV2gxvOkVOQTubAlffwfGmkqcZU-C3-0_xJCpUa5uAMDKGYuSAj5wHYeOUAj4bUV4Lory0v&currency=EUR"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      paypal.Buttons({
+        createOrder: function (data, actions) {
+          // Récupère le total affiché (supprime le symbole € et les espaces)
+          let totalText = document.getElementById("grand-total").textContent.replace("€", "").trim();
+          totalText = totalText.replace(/\s/g, ''); // retire les espaces milliers si présents
+          return actions.order.create({
+            purchase_units: [{
+              amount: { value: totalText }
+            }]
+          });
+        },
+        onApprove: function (data, actions) {
+          return actions.order.capture().then(function (details) {
+            // Ici tu peux aussi faire un appel fetch vers ton back pour enregistrer la commande
+            alert("✅ Paiement réussi, merci " + (details.payer.name && details.payer.name.given_name ? details.payer.name.given_name : 'client') + " !");
+            window.location.href = "/order/confirm";
+          });
+        },
+        onError: function (err) {
+          console.error('PayPal error', err);
+          alert("Une erreur est survenue lors du paiement PayPal. Réessaye plus tard.");
+        }
+      }).render('#paypal-button-container');
+    });
+  </script>
 {% endblock %}
 

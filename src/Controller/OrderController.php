@@ -50,6 +50,7 @@ final class OrderController extends AbstractController
 
         return $this->render('order/index.html.twig', [
             'form'   => $form->createView(),
+            'items'  => $cartWithData,
             'total'  => $total,
             'cities' => $cities, // 👉 pour le select
         ]);
@@ -68,4 +69,13 @@ final class OrderController extends AbstractController
             'content' => $cityShippingPrice
         ]);
     }
+    #[Route('/order/confirm', name: 'app_order_confirm')]
+public function confirm(SessionInterface $session): Response
+{
+    // 🧹 vider le panier après paiement
+    $session->set('cart', []);
+
+    // ✅ afficher une page de confirmation
+    return $this->render('order/confirm.html.twig');
+}
 }

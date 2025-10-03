@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Promotions{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-danger">🔥 Promotions en cours 🔥</h1>
+
+    <div class="row g-4">
+        {% for promo in promotions %}
+            <div class="col-md-3">
+                <div class="card h-100 shadow-sm border-0">
+                    
+                    {# Image produit #}
+                    <img src="{{ asset('uploads/images/' ~ promo.image) }}" 
+                         class="card-img-top p-3 bg-light"
+                         alt="{{ promo.name }}"
+                         style="height: 200px; object-fit: contain;">
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ promo.name }}</h5>
+                        <p class="text-muted small">{{ promo.description|slice(0, 50) }}...</p>
+
+                        <p>
+                            <span class="text-decoration-line-through text-muted">{{ promo.price }} €</span><br>
+                            <span class="fw-bold text-success">
+                                {{ promo.price - (promo.price * promo.promo / 100) }} €
+                            </span>
+                            <span class="badge bg-danger ms-2">-{{ promo.promo }}%</span>
+                        </p>
+
+                        <a href="{{ path('app_cart_add', { id: promo.id }) }}" class="btn btn-success mt-auto w-100">
+                            🛒 Ajouter au panier
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-muted">Aucune promotion pour le moment.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation - LilyShop{% endblock %}
+
+{% block body %}
+<div class="container my-5 text-center">
+    <div class="alert alert-success shadow-sm p-4">
+        <h1>🎉 Merci pour votre commande !</h1>
+        <p>Votre paiement a bien été effectué avec PayPal ✅</p>
+        <a href="{{ path('app_home') }}" class="btn btn-primary mt-3">
+            ⬅️ Retour à l'accueil
+        </a>
+    </div>
+</div>
+{% endblock %}

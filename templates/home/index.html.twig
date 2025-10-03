@@ -3,49 +3,57 @@
 {% block title %}Accueil - LilyShop{% endblock %}
 
 {% block body %}
-<div class="container">
-    <br><br><br>
-    <h1 class="mb-4 pb-2 border-bottom">Produits</h1>
+<div class="container my-5">
 
+    <!-- 🏠 Section Hero -->
+    <div class="p-5 mb-5 text-center bg-light rounded shadow-sm">
+        <h1 class="display-5 fw-bold">Bienvenue sur LilyShop 🛍️</h1>
+        <p class="lead text-muted">
+            Découvrez nos meilleures offres et les derniers produits ajoutés !
+        </p>
+        <a href="{{ path('app_home') }}" class="btn btn-success btn-lg mt-3">Voir les produits</a>
+    </div>
 
+    <!-- 🛒 Produits -->
+    <h2 class="mb-4">🆕 Nos Produits</h2>
     <div class="row g-4">
         {% for product in products %}
             <div class="col-md-3">
-                <div class="card h-100 shadow-sm border-0 d-flex flex-column">
-                    
-                    {# Image produit #}
-                    <img src="{{ asset('uploads/images/' ~ product.image) }}" 
-                         class="card-img-top p-3 bg-light"
-                         alt="{{ product.name }}"
-                         style="height: 200px; object-fit: contain;">
+                <div class="card h-100 shadow-sm border-0">
+
+                    <!-- Image produit -->
+                    <a href="{{ path('app_home_product_show', {'id': product.id}) }}">
+                        <img src="{{ asset('uploads/images/' ~ product.image) }}" 
+                             class="card-img-top p-3 bg-light"
+                             alt="{{ product.name }}"
+                             style="height: 200px; object-fit: contain;">
+                    </a>
 
                     <div class="card-body d-flex flex-column">
-                        <a style="text-decoration: none;" href="{{ path('app_home_product_show', { id: product.id }) }}">
+                        <a href="{{ path('app_home_product_show', {'id': product.id}) }}" 
+                           class="text-decoration-none text-dark">
                             <h5 class="card-title">{{ product.name }}</h5>
                         </a>
-                        
-                        {# La description occupe l’espace restant #}
-                        <p class="card-text text-muted small flex-grow-1">
+                        <p class="card-text text-muted small">
                             {{ product.description|slice(0, 50) }}...
                         </p>
-
-                        {# Prix + bouton toujours en bas #}
-                        <div class="mt-auto">
-                            <p class="fw-bold text-success mb-2">{{ product.price }} €</p>
-                            <a href="{{ path('app_cart_add', { 'id': product.id }) }}" class="btn btn-success w-100">
-                            🛒 Ajouter au panier
-                            </a>
-                        </div>
-
+                        <p class="fw-bold text-success mb-3">{{ product.price }} €</p>
+                        
+                        <a href="{{ path('app_cart_add', {'id': product.id}) }}" 
+                           class="btn btn-success mt-auto w-100">
+                           🛒 Ajouter au panier
+                        </a>
                     </div>
                 </div>
             </div>
+        {% else %}
+            <p class="text-center text-muted">Aucun produit disponible pour le moment.</p>
         {% endfor %}
     </div>
-    <br><br>
-    
 
-    {{ knp_pagination_render(products,'layouts/pagination.html.twig') }}
+    <!-- 📌 Pagination Bootstrap -->
+    <div class="d-flex justify-content-center mt-5">
+        {{ knp_pagination_render(products, '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig') }}
+    </div>
 </div>
 {% endblock %}
-
