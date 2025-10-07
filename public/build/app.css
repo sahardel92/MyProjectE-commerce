@@ -1,0 +1,121 @@
+/*!**************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[1].use[1]!./assets/styles/app.css ***!
+  \**************************************************************************************************************/
+body {
+    /* background-color: skyblue; */
+}
+
+.login-form {
+    width: 500px;
+    text-align: center;
+}
+
+.btn-block {
+    width: 100%;
+
+}
+.security-form {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    height: 100vh;
+}
+h1, h2 {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.nav-cart {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.nav-cart i {
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+.nav-cart .badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  border-radius: 50%;
+  padding: 4px 6px;
+  font-size: 12px;
+}
+/* 🌸 Page d'accueil LilyShop */
+.home-page {
+  font-family: "Poppins", sans-serif;
+  background-color: #fafafa;
+}
+
+/* 🏠 Hero section */
+.hero-section {
+  background: linear-gradient(135deg, #eafaf1 0%, #ffffff 100%);
+  border-radius: 20px;
+  padding: 60px 20px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.hero-title {
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+.hero-subtitle {
+  color: #6c757d;
+}
+
+.hero-btn {
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 30px;
+}
+
+/* 🛍️ Cards Produits */
+.product-card {
+  transition: all 0.25s ease-in-out;
+  border-radius: 15px;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+}
+
+.product-img {
+  border-radius: 15px 15px 0 0;
+  height: 200px;
+  object-fit: contain;
+}
+
+.product-desc {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+/* 🛒 Bouton panier */
+.btn-add-cart {
+  background-color: #2e7d32;
+  border: none;
+  transition: 0.3s;
+}
+
+.btn-add-cart:hover {
+  background-color: #43a047;
+  transform: scale(1.03);
+}
+
+/* 🧾 Pagination Bootstrap */
+.pagination {
+  --bs-pagination-active-bg: #2e7d32;
+  --bs-pagination-active-border-color: #2e7d32;
+  --bs-pagination-hover-color: #2e7d32;
+  font-weight: 500;
+}
+
+
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYXBwLmNzcyIsIm1hcHBpbmdzIjoiOzs7QUFBQTtJQUNJLCtCQUErQjtBQUNuQzs7QUFFQTtJQUNJLFlBQVk7SUFDWixrQkFBa0I7QUFDdEI7O0FBRUE7SUFDSSxXQUFXOztBQUVmO0FBQ0E7SUFDSSxhQUFhO0lBQ2IsbUJBQW1CO0lBQ25CLDZCQUE2QjtJQUM3QixXQUFXO0lBQ1gsYUFBYTtBQUNqQjtBQUNBO0lBQ0ksZ0JBQWdCO0lBQ2hCLG1CQUFtQjtBQUN2QjtBQUNBO0VBQ0UsYUFBYTtFQUNiLG1CQUFtQjtFQUNuQixrQkFBa0I7QUFDcEI7O0FBRUE7RUFDRSxlQUFlO0VBQ2YsaUJBQWlCO0FBQ25COztBQUVBO0VBQ0Usa0JBQWtCO0VBQ2xCLFNBQVM7RUFDVCxZQUFZO0VBQ1osa0JBQWtCO0VBQ2xCLGdCQUFnQjtFQUNoQixlQUFlO0FBQ2pCO0FBQ0EsK0JBQStCO0FBQy9CO0VBQ0Usa0NBQWtDO0VBQ2xDLHlCQUF5QjtBQUMzQjs7QUFFQSxvQkFBb0I7QUFDcEI7RUFDRSw2REFBNkQ7RUFDN0QsbUJBQW1CO0VBQ25CLGtCQUFrQjtFQUNsQixrQkFBa0I7RUFDbEIsMENBQTBDO0FBQzVDOztBQUVBO0VBQ0UsZ0JBQWdCO0VBQ2hCLGNBQWM7QUFDaEI7O0FBRUE7RUFDRSxjQUFjO0FBQ2hCOztBQUVBO0VBQ0UsZ0JBQWdCO0VBQ2hCLGtCQUFrQjtFQUNsQixtQkFBbUI7QUFDckI7O0FBRUEsdUJBQXVCO0FBQ3ZCO0VBQ0UsaUNBQWlDO0VBQ2pDLG1CQUFtQjtBQUNyQjs7QUFFQTtFQUNFLDJCQUEyQjtFQUMzQix5Q0FBeUM7QUFDM0M7O0FBRUE7RUFDRSw0QkFBNEI7RUFDNUIsYUFBYTtFQUNiLG1CQUFtQjtBQUNyQjs7QUFFQTtFQUNFLFdBQVc7RUFDWCxpQkFBaUI7QUFDbkI7O0FBRUEscUJBQXFCO0FBQ3JCO0VBQ0UseUJBQXlCO0VBQ3pCLFlBQVk7RUFDWixnQkFBZ0I7QUFDbEI7O0FBRUE7RUFDRSx5QkFBeUI7RUFDekIsc0JBQXNCO0FBQ3hCOztBQUVBLDRCQUE0QjtBQUM1QjtFQUNFLGtDQUFrQztFQUNsQyw0Q0FBNEM7RUFDNUMsb0NBQW9DO0VBQ3BDLGdCQUFnQjtBQUNsQiIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2Fzc2V0cy9zdHlsZXMvYXBwLmNzcyJdLCJzb3VyY2VzQ29udGVudCI6WyJib2R5IHtcbiAgICAvKiBiYWNrZ3JvdW5kLWNvbG9yOiBza3libHVlOyAqL1xufVxuXG4ubG9naW4tZm9ybSB7XG4gICAgd2lkdGg6IDUwMHB4O1xuICAgIHRleHQtYWxpZ246IGNlbnRlcjtcbn1cblxuLmJ0bi1ibG9jayB7XG4gICAgd2lkdGg6IDEwMCU7XG5cbn1cbi5zZWN1cml0eS1mb3JtIHtcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAganVzdGlmeS1jb250ZW50OiBzcGFjZS1hcm91bmQ7XG4gICAgd2lkdGg6IDEwMCU7XG4gICAgaGVpZ2h0OiAxMDB2aDtcbn1cbmgxLCBoMiB7XG4gICAgbWFyZ2luLXRvcDogMzBweDtcbiAgICBtYXJnaW4tYm90dG9tOiAzMHB4O1xufVxuLm5hdi1jYXJ0IHtcbiAgZGlzcGxheTogZmxleDtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xufVxuXG4ubmF2LWNhcnQgaSB7XG4gIGZvbnQtc2l6ZTogMjBweDtcbiAgbWFyZ2luLXJpZ2h0OiA1cHg7XG59XG5cbi5uYXYtY2FydCAuYmFkZ2Uge1xuICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gIHRvcDogLThweDtcbiAgcmlnaHQ6IC0xMHB4O1xuICBib3JkZXItcmFkaXVzOiA1MCU7XG4gIHBhZGRpbmc6IDRweCA2cHg7XG4gIGZvbnQtc2l6ZTogMTJweDtcbn1cbi8qIPCfjLggUGFnZSBkJ2FjY3VlaWwgTGlseVNob3AgKi9cbi5ob21lLXBhZ2Uge1xuICBmb250LWZhbWlseTogXCJQb3BwaW5zXCIsIHNhbnMtc2VyaWY7XG4gIGJhY2tncm91bmQtY29sb3I6ICNmYWZhZmE7XG59XG5cbi8qIPCfj6AgSGVybyBzZWN0aW9uICovXG4uaGVyby1zZWN0aW9uIHtcbiAgYmFja2dyb3VuZDogbGluZWFyLWdyYWRpZW50KDEzNWRlZywgI2VhZmFmMSAwJSwgI2ZmZmZmZiAxMDAlKTtcbiAgYm9yZGVyLXJhZGl1czogMjBweDtcbiAgcGFkZGluZzogNjBweCAyMHB4O1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIGJveC1zaGFkb3c6IDAgNHB4IDIwcHggcmdiYSgwLCAwLCAwLCAwLjA1KTtcbn1cblxuLmhlcm8tdGl0bGUge1xuICBmb250LXdlaWdodDogNzAwO1xuICBjb2xvcjogIzJlN2QzMjtcbn1cblxuLmhlcm8tc3VidGl0bGUge1xuICBjb2xvcjogIzZjNzU3ZDtcbn1cblxuLmhlcm8tYnRuIHtcbiAgZm9udC13ZWlnaHQ6IDYwMDtcbiAgcGFkZGluZzogMTJweCAyOHB4O1xuICBib3JkZXItcmFkaXVzOiAzMHB4O1xufVxuXG4vKiDwn5uN77iPIENhcmRzIFByb2R1aXRzICovXG4ucHJvZHVjdC1jYXJkIHtcbiAgdHJhbnNpdGlvbjogYWxsIDAuMjVzIGVhc2UtaW4tb3V0O1xuICBib3JkZXItcmFkaXVzOiAxNXB4O1xufVxuXG4ucHJvZHVjdC1jYXJkOmhvdmVyIHtcbiAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKC01cHgpO1xuICBib3gtc2hhZG93OiAwIDhweCAxOHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbn1cblxuLnByb2R1Y3QtaW1nIHtcbiAgYm9yZGVyLXJhZGl1czogMTVweCAxNXB4IDAgMDtcbiAgaGVpZ2h0OiAyMDBweDtcbiAgb2JqZWN0LWZpdDogY29udGFpbjtcbn1cblxuLnByb2R1Y3QtZGVzYyB7XG4gIGNvbG9yOiAjNzc3O1xuICBmb250LXNpemU6IDAuOXJlbTtcbn1cblxuLyog8J+bkiBCb3V0b24gcGFuaWVyICovXG4uYnRuLWFkZC1jYXJ0IHtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzJlN2QzMjtcbiAgYm9yZGVyOiBub25lO1xuICB0cmFuc2l0aW9uOiAwLjNzO1xufVxuXG4uYnRuLWFkZC1jYXJ0OmhvdmVyIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzQzYTA0NztcbiAgdHJhbnNmb3JtOiBzY2FsZSgxLjAzKTtcbn1cblxuLyog8J+nviBQYWdpbmF0aW9uIEJvb3RzdHJhcCAqL1xuLnBhZ2luYXRpb24ge1xuICAtLWJzLXBhZ2luYXRpb24tYWN0aXZlLWJnOiAjMmU3ZDMyO1xuICAtLWJzLXBhZ2luYXRpb24tYWN0aXZlLWJvcmRlci1jb2xvcjogIzJlN2QzMjtcbiAgLS1icy1wYWdpbmF0aW9uLWhvdmVyLWNvbG9yOiAjMmU3ZDMyO1xuICBmb250LXdlaWdodDogNTAwO1xufVxuXG4iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=*/
