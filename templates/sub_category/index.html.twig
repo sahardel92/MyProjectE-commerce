@@ -1,41 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}SubCategory index{% endblock %}
+{% block title %}Sous Categories
+{% endblock %}
 
 {% block body %}
 
+	<div class="container"><br><br>
+		<h1>Sous Categories</h1><br><br>
 
-<div class="container"><br><br>
-    <h1>Sous Categories</h1><br><br>
+		{% include 'layouts/_flash_message.html.twig' %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for sub_category in sub_categories %}
-            <tr>
-                <td>{{ sub_category.id }}</td>
-                <td>{{ sub_category.name }}</td>
-                <td>{{ sub_category.category.name }}</td>
-                <td>
-                    <a class="btn btn-outline-primary" href="{{ path('app_sub_category_show', {'id': sub_category.id}) }}">show</a>
-                    <a  class="btn btn-danger" href="{{ path('app_sub_category_edit', {'id': sub_category.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+		<a class="btn btn-outline-dark mb-4 text-capitalize" href="{{ path('app_sub_category_new') }}">
+			<div class="d-flex justify-content-center align-items-center">
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-plus-circle" viewbox="0 0 16 16">
+					<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+					<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+				</svg>
+				<span class="mx-2 fw-bold">Ajouter une sous-catégorie</span>
+			</div>
+		</a>
 
-    <a class="btn btn-primary" href="{{ path('app_sub_category_new') }}">Create new</a>
-</div>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Nom</th>
+					<th>Catégorie</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for sub_category in sub_categories %}
+					<tr>
+						<td>{{ sub_category.id }}</td>
+						<td>{{ sub_category.name }}</td>
+						<td>{{ sub_category.category.name }}</td>
+						<td class="d-flex justify-content-end">
+							<a class="btn btn-outline-primary mx-2" href="{{ path('app_sub_category_show', {'id': sub_category.id}) }}">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye" viewbox="0 0 16 16">
+									<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM8 13c-2.97 0-5.48-2.09-6.32-5 0.84-2.91 3.35-5 6.32-5s5.48 2.09 6.32 5c-0.84 2.91-3.35 5-6.32 5z"/>
+									<path d="M8 5a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+								</svg>
+							</a>
+							<a class="btn btn-outline-warning" href="{{ path('app_sub_category_edit', {'id': sub_category.id}) }}">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewbox="0 0 16 16">
+									<path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+									<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+								</svg>
+							</a>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="4">Aucune sous-catégorie à afficher pour l'instant</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
 {% endblock %}
+
