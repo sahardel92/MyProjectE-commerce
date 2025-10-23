@@ -4,30 +4,41 @@
 
 {% block body %}
 
-    <div class="container security-form">
-        <div class="login-form">
-            <h1>Inscription</h1>
 
-        {{ form_errors(registrationForm) }}
+<div class="container security-form min-vh-100 d-flex align-items-center">
+	<div
+		class="row w-100 justify-content-center align-items-center bg-white">
 
-        {{ form_start(registrationForm) }}
-            {{ form_widget(registrationForm.email,{'attr':{'class':'form form-control','placeholder':"Email"}}) }}
-            <br>
+		<!-- Form Column -->
+		<div class="col-md-5">
+			<div class="p-4 ">
+				<h1 class="h3 mb-3 font-weight-normal text-center">Inscription</h1>
 
-            {{ form_widget(registrationForm.firstName,{'attr':{'class':'form form-control','placeholder':"Nom"}}) }}
-            <br>
-            {{ form_widget(registrationForm.lastName,{'attr':{'class':'form form-control','placeholder':"Prénom"}}) }}
-            <br>
-            {{ form_widget(registrationForm.plainPassword, {
-                'attr': {'class': 'form form-control', 'placeholder': 'Mot de passe'}
-            }) }}
+				{{ form_errors(registrationForm) }}
 
-            {{ form_row(registrationForm.agreeTerms, {
-                'attr': {'class': 'form form-check-input'}
-            }) }}
+				{{ form_start(registrationForm) }}
+				{{ form_widget(registrationForm.email, {'attr': {'class':'form-control mb-3','placeholder':'Email'}}) }}
+				{{ form_widget(registrationForm.firstName, {'attr': {'class':'form-control mb-3','placeholder':'Nom'}}) }}
+				{{ form_widget(registrationForm.lastName, {'attr': {'class':'form-control mb-3','placeholder':'Prénom'}}) }}
+				{{ form_widget(registrationForm.plainPassword, {'attr': {'class':'form-control mb-3','placeholder':'Mot de passe'}}) }}
 
-            <button type="submit" class="btn btn-block btn-primary">Register</button>
-        {{ form_end(registrationForm) }}
-        </div>
-    </div> 
+				<div class="form-check mb-3">
+					{{ form_row(registrationForm.agreeTerms, {'attr': {'class':'form-check-input'}}) }}
+				</div>
+
+				<button type="submit" class="btn btn-lg btn-outline-success btn-block">Register</button>
+				{{ form_end(registrationForm) }}
+			</div>
+		</div>
+
+		<!-- Image Column -->
+		<div class="col-md-5">
+			<img src="{{ asset('uploads/images/signup.png') }}" alt="Register Image" class="img-fluid">
+		</div>
+
+	</div>
+</div>
+
+
+
 {% endblock %}

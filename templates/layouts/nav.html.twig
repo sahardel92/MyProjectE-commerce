@@ -1,103 +1,128 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-  <div class="container">
+	<div
+		class="container">
 
-    <!-- Logo -->
-    <a class="navbar-brand" href="{{ path('app_home') }}">LilyShop</a>
+		<!-- Logo -->
+		<a class="navbar-brand" href="{{ path('app_home') }}">
+			<span class="d-inline-block bg-primary text-white rounded text-center fw-bold" style="width: 32px; height: 32px; line-height: 32px;">
+				L
+			</span>
 
-    <!-- Bouton mobile -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
-      aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+			LilyShop</a>
 
-    <div class="collapse navbar-collapse" id="navbarScroll">
+		<!-- Bouton mobile -->
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
 
-      <!-- Menu principal -->
-      <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-        <!-- Home -->
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Home</a>
-        </li>
+		<div
+			class="collapse navbar-collapse" id="navbarScroll">
 
-        <!-- Dropdown Catégories -->
-        {% if categories is defined %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Catégories
-            </a>
-            <ul class="dropdown-menu">
-              {% for category in categories %}
-                <li>
-                  <a class="dropdown-item text-success fw-bold" href="#">{{ category.name }}</a>
-                </li>
-                {% for subCategory in category.subCategories %}
-                  <li>
-                    <a class="dropdown-item" href="{{ path('app_home_product_filter', {'id': subCategory.id }) }}">
-                      {{ subCategory.name }}
-                    </a>
-                  </li>
-                {% endfor %}
-                <li><hr class="dropdown-divider"></li>
-              {% endfor %}
-            </ul>
-          </li>
-        {% endif %}
+			<!-- Menu principal -->
+			<ul
+				class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+				<!-- Home -->
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Home</a>
+				</li>
 
-        <!-- Menu Administrateur -->
-        {% if is_granted('ROLE_ADMIN') %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Administrateur
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="{{ path('app_category')}}">Catégories</a></li>
-              <li><a class="dropdown-item" href="{{ path('app_category_new')}}">Ajouter une catégorie</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{{ path('app_sub_category_index') }}">Sous-Catégories</a></li>
-              <li><a class="dropdown-item" href="{{ path('app_sub_category_new') }}">Créer une sous-catégorie</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{{ path('app_product_index')}}">Produits</a></li>
-              <li><a class="dropdown-item" href="{{ path('app_user')}}">Utilisateurs</a></li>
-            </ul>
-          </li>
-        {% endif %}
-      </ul> 
+				<!-- Dropdown Catégories -->
+				{% if categories is defined %}
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Catégories
+						</a>
+						<ul class="dropdown-menu">
+							{% for category in categories %}
+								<li>
+									<a class="dropdown-item text-success fw-bold" href="#">{{ category.name }}</a>
+								</li>
+								{% for subCategory in category.subCategories %}
+									<li>
+										<a class="dropdown-item" href="{{ path('app_home_product_filter', {'id': subCategory.id }) }}">
+											{{ subCategory.name }}
+										</a>
+									</li>
+								{% endfor %}
+								<li><hr class="dropdown-divider"></li>
+							{% endfor %}
+						</ul>
+					</li>
+				{% endif %}
 
-      <!-- Barre de recherche centrée -->
-      <form class="d-flex mx-auto" role="search" style="width: 400px;">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">
-          <i class="bi bi-search"></i>
-        </button>
-      </form>
+				<!-- Menu Administrateur -->
+				{% if is_granted('ROLE_ADMIN') %}
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Administrateur
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<a class="dropdown-item" href="{{ path('app_category')}}">Catégories</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('app_category_new')}}">Ajouter une catégorie</a>
+							</li>
+							<li><hr class="dropdown-divider"></li>
+							<li>
+								<a class="dropdown-item" href="{{ path('app_sub_category_index') }}">Sous-Catégories</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('app_sub_category_new') }}">Créer une sous-catégorie</a>
+							</li>
+							<li><hr class="dropdown-divider"></li>
+							<li>
+								<a class="dropdown-item" href="{{ path('app_product_index')}}">Produits</a>
+							</li>
+							<li>
+								<a class="dropdown-item" href="{{ path('app_user')}}">Utilisateurs</a>
+							</li>
+						</ul>
+					</li>
+				{% endif %}
+			</ul>
 
-      <!-- Boutons login/register si user pas connecté -->
-      {% if not app.user %}
-        <div class="d-flex me-3">
-          <a href="{{ path('app_register') }}" class="btn btn-outline-light me-2">S’inscrire</a>
-          <a href="{{ path('app_login') }}" class="btn btn-success">Se connecter</a>
-        </div>
-      {% endif %}
+			<!-- Barre de recherche centrée -->
+			<form class="d-flex mx-auto" role="search" style="width: 400px;">
+				<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+				<button class="btn btn-outline-primary" type="submit">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewbox="0 0 16 16">
+						<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+					</svg>
 
-      <!-- Retours & Panier -->
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item me-4">
-          <a class="nav-link" href="{{ path('app_order') }}">
-            Retours <br><strong>et commandes</strong>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link nav-cart" href="{{ path('app_cart') }}">
-            <i class="fas fa-shopping-cart"></i>
-            Panier
-            <span class="badge bg-warning text-dark">
-              {{ app.session.get('cart') is defined ? app.session.get('cart')|length : 0 }}
-            </span>
-          </a>
-        </li>
-      </ul>
+				</button>
+			</form>
 
-    </div>
-  </div>
-</nav>
+			<!-- Boutons login/register si user pas connecté -->
+			{% if not app.user %}
+				<div class="d-flex me-3">
+					<a href="{{ path('app_register') }}" class="btn btn-primary me-2">S’inscrire</a>
+					<a href="{{ path('app_login') }}" class="btn btn-outline-primary">Se connecter</a>
+				</div>
+			{% endif %}
 
+			<!-- Retours & Panier -->
+			<ul class="navbar-nav ms-auto">
+				<li class="nav-item me-4">
+					<a class="nav-link" href="{{ path('app_order') }}">
+						Retours
+						<br><strong>et commandes</strong>
+					</a>
+				</li>
+				<li class="nav-item d-flex justify-content-center align-items-center">
+					<a class="nav-link nav-cart " href="{{ path('app_cart') }}">
+						<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-cart2" viewbox="0 0 16 16">
+							<path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
+						</svg>
+
+						<span class="badge bg-warning text-dark">
+							{{ app.session.get('cart') is defined ? app.session.get('cart')|length : 0 }}
+						</span>
+					</a>
+
+				</li>
+			</li>
+		</ul>
+
+	</div>
+</div></nav>
