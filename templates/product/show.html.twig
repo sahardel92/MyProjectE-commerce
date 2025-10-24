@@ -5,13 +5,21 @@
 {% block body %}
 <div class="container my-4">
 
-  <div class="row">
-    <!-- 🖼️ Image produit -->
-    <div class="col-md-5 text-center">
-      <img src="{{ asset('uploads/' ~ product.image) }}" 
-           alt="{{ product.name }}" 
-           class="img-fluid rounded shadow-sm">
-    </div>
+  <!-- 🖼️ Image produit -->
+<div class="col-md-5 text-center">
+  <img 
+    src="{{ absolute_url(asset('uploads/images/' ~ product.image)) }}"
+    alt="{{ product.name }}"
+    class="img-fluid rounded shadow-sm mb-3"
+    style="max-height: 400px; object-fit: contain;"
+  >
+
+  {# 🔍 Lien temporaire pour vérifier que Symfony génère bien le bon chemin #}
+  <p style="color:red; font-size: 0.9rem;">
+    {{ absolute_url(asset('uploads/images/' ~ product.image)) }}
+  </p>
+</div>
+
 
     <!-- ℹ️ Détails produit -->
     <div class="col-md-7">
