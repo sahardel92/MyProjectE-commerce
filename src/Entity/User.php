@@ -47,6 +47,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'user')]
     private Collection $reviews;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $googleId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $fullName = null;
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
@@ -186,4 +192,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+        public function getGoogleId(): ?string
+    {
+    return $this->googleId;
+    }
+
+    public function setGoogleId(?string $googleId): static
+    {
+    $this->googleId = $googleId;
+    return $this;
+    }
+
+    public function getFullName(): ?string
+    {
+    return $this->fullName;
+    }
+
+    public function setFullName(?string $fullName): static
+    {
+    $this->fullName = $fullName;
+    return $this;
+    }
+
 }

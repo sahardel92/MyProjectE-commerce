@@ -1,44 +1,99 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
+<div class="min-vh-100 d-flex align-items-center justify-content-center"
+     style="background: linear-gradient(135deg, #e9f7ef, #f9fdf9);">
+    <div class="row w-100 justify-content-center align-items-center px-3">
 
+        <!-- Image à gauche -->
+        <div class="col-md-5 d-none d-md-block text-center">
+            <img src="{{ asset('uploads/images/signup.png') }}" 
+                 alt="Inscription illustration"
+                 class="img-fluid rounded-4 shadow-lg"
+                 style="max-width: 90%; transform: scale(1.05);">
+        </div>
 
-<div class="container security-form min-vh-100 d-flex align-items-center">
-	<div
-		class="row w-100 justify-content-center align-items-center bg-white">
+        <!-- Formulaire à droite -->
+        <div class="col-md-5 col-lg-4 bg-white p-5 rounded-4 shadow-lg"
+             style="backdrop-filter: blur(6px);">
+            
+            <h1 class="text-center mb-4 fw-bold" style="color:#2e7d32;">Créer un compte</h1>
 
-		<!-- Form Column -->
-		<div class="col-md-5">
-			<div class="p-4 ">
-				<h1 class="h3 mb-3 font-weight-normal text-center">Inscription</h1>
+            {{ form_errors(registrationForm) }}
 
-				{{ form_errors(registrationForm) }}
+            {{ form_start(registrationForm) }}
 
-				{{ form_start(registrationForm) }}
-				{{ form_widget(registrationForm.email, {'attr': {'class':'form-control mb-3','placeholder':'Email'}}) }}
-				{{ form_widget(registrationForm.firstName, {'attr': {'class':'form-control mb-3','placeholder':'Nom'}}) }}
-				{{ form_widget(registrationForm.lastName, {'attr': {'class':'form-control mb-3','placeholder':'Prénom'}}) }}
-				{{ form_widget(registrationForm.plainPassword, {'attr': {'class':'form-control mb-3','placeholder':'Mot de passe'}}) }}
+            <div class="form-group mb-3">
+                {{ form_widget(registrationForm.email, {
+                    'attr': {
+                        'class': 'form-control rounded-3 shadow-sm border-success-subtle',
+                        'placeholder': 'Adresse e-mail'
+                    }
+                }) }}
+            </div>
 
-				<div class="form-check mb-3">
-					{{ form_row(registrationForm.agreeTerms, {'attr': {'class':'form-check-input'}}) }}
-				</div>
+            <div class="form-group mb-3">
+                {{ form_widget(registrationForm.firstName, {
+                    'attr': {
+                        'class': 'form-control rounded-3 shadow-sm border-success-subtle',
+                        'placeholder': 'Prénom'
+                    }
+                }) }}
+            </div>
 
-				<button type="submit" class="btn btn-lg btn-outline-success btn-block">Register</button>
-				{{ form_end(registrationForm) }}
-			</div>
-		</div>
+            <div class="form-group mb-3">
+                {{ form_widget(registrationForm.lastName, {
+                    'attr': {
+                        'class': 'form-control rounded-3 shadow-sm border-success-subtle',
+                        'placeholder': 'Nom'
+                    }
+                }) }}
+            </div>
 
-		<!-- Image Column -->
-		<div class="col-md-5">
-			<img src="{{ asset('uploads/images/signup.png') }}" alt="Register Image" class="img-fluid">
-		</div>
+            <div class="form-group mb-3">
+                {{ form_widget(registrationForm.plainPassword, {
+                    'attr': {
+                        'class': 'form-control rounded-3 shadow-sm border-success-subtle',
+                        'placeholder': 'Mot de passe'
+                    }
+                }) }}
+            </div>
 
-	</div>
+            <div class="form-check mb-4">
+                {{ form_row(registrationForm.agreeTerms, {
+                    'attr': {'class': 'form-check-input'},
+                    'label': 'J’accepte les conditions générales'
+                }) }}
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg w-100 rounded-3 shadow-sm">
+                <i class="bx bx-user-plus me-2"></i> S’inscrire
+            </button>
+
+            {{ form_end(registrationForm) }}
+
+            <div class="d-flex align-items-center my-3">
+                <hr class="flex-grow-1">
+                <span class="mx-2 text-muted small">ou</span>
+                <hr class="flex-grow-1">
+            </div>
+
+            <a href="{{ path('connect_google_start') }}" 
+               class="btn btn-light border shadow-sm w-100 rounded-3 d-flex align-items-center justify-content-center gap-2">
+                <img src="https://developers.google.com/identity/images/g-logo.png" 
+                     alt="Google" width="20">
+                <span class="fw-semibold">S’inscrire avec Google</span>
+            </a>
+
+            <p class="text-center text-muted mt-4 mb-0 small">
+                Déjà inscrit ? 
+                <a href="{{ path('app_login') }}" class="text-success fw-semibold text-decoration-none">
+                    Connectez-vous ici
+                </a>
+            </p>
+        </div>
+    </div>
 </div>
-
-
-
 {% endblock %}
