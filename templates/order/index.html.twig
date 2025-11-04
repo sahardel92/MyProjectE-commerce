@@ -10,14 +10,28 @@
       <div class="card shadow-sm p-4">
         <h2 class="mb-4">📦 Informations de livraison</h2>
 
-        {{ form_start(form) }}
+        {% for message in app.flashes('error') %}
+          <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+
+        {% if showPayment %}
+          <div class="alert alert-success mb-4">
+            ✅ Adresse validée ! Vous pouvez maintenant procéder au paiement.
+          </div>
+        {% endif %}
+
+        {{ form_start(form, {
+            action: path('app_order'),
+            method: 'POST',
+            attr: { id: 'order-form', novalidate: 'novalidate' }
+        }) }}
           <div class="row g-3">
             {{ form_widget(form) }}
           </div>
 
           <div class="mt-4 text-end">
-            <button type="submit" class="btn btn-primary btn-lg">
-              ✅ Continuer
+            <button type="submit" class="btn btn-primary btn-lg" id="continue-btn">
+              {{ showPayment ? 'Modifier l’adresse' : '✅ Continuer' }}
             </button>
           </div>
         {{ form_end(form) }}
@@ -61,8 +75,11 @@
 
         <hr>
 
-        <!-- 💳 Paiement PayPal -->
-        <div id="paypal-button-container"></div>
+        <!-- 💳 Bouton PayPal toujours visible mais désactivé -->
+        <div class="text-center">
+          <div id="paypal-button-container" class="opacity-50"></div>
+          <small id="paypal-msg" class="text-muted">⚠️ Validez votre adresse pour activer le paiement PayPal.</small>
+        </div>
       </div>
     </div>
   </div>
@@ -72,7 +89,7 @@
 {% block javascripts %}
   {{ parent() }}
 
-  <!-- ⚡ Script livraison dynamique -->
+  <!-- ⚡ Mise à jour du coût de livraison -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const citySelector = document.querySelector("#order_city");
@@ -84,13 +101,12 @@
         try {
           const response = await fetch(`/city/${cityId}/shipping/cost`);
           const data = await response.json();
-
           if (data.status === 200) {
             const shipping = parseFloat(data.content);
             shippingCostEl.textContent = `${shipping.toFixed(2)} €`;
             grandTotalEl.textContent = `${(productTotal + shipping).toFixed(2)} €`;
           }
-        } catch (error) {
+        } catch {
           shippingCostEl.textContent = "Erreur...";
         }
       }
@@ -102,35 +118,45 @@
     });
   </script>
 
-  <!-- ⚡ Script PayPal (Client ID inséré) -->
+  <!-- 💳 Script PayPal -->
   <script src="https://www.paypal.com/sdk/js?client-id=ARIlNMxxayV2gxvOkVOQTubAlffwfGmkqcZU-C3-0_xJCpUa5uAMDKGYuSAj5wHYeOUAj4bUV4Lory0v&currency=EUR"></script>
-
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      const paypalContainer = document.getElementById('paypal-button-container');
+      const paypalMsg = document.getElementById('paypal-msg');
+      const isPaymentActive = "{{ showPayment ? '1' : '0' }}" === '1';
+
+      // Rendu du bouton PayPal
       paypal.Buttons({
-        createOrder: function (data, actions) {
-          // Récupère le total affiché (supprime le symbole € et les espaces)
+        createOrder: (data, actions) => {
           let totalText = document.getElementById("grand-total").textContent.replace("€", "").trim();
-          totalText = totalText.replace(/\s/g, ''); // retire les espaces milliers si présents
+          totalText = totalText.replace(/\s/g, '');
           return actions.order.create({
-            purchase_units: [{
-              amount: { value: totalText }
-            }]
+            purchase_units: [{ amount: { value: totalText } }]
           });
         },
-        onApprove: function (data, actions) {
-          return actions.order.capture().then(function (details) {
-            // Ici tu peux aussi faire un appel fetch vers ton back pour enregistrer la commande
-            alert("✅ Paiement réussi, merci " + (details.payer.name && details.payer.name.given_name ? details.payer.name.given_name : 'client') + " !");
+        onApprove: (data, actions) => {
+          return actions.order.capture().then(details => {
+            alert("✅ Paiement réussi, merci " + (details.payer.name?.given_name || 'client') + " !");
             window.location.href = "/order/confirm";
           });
         },
-        onError: function (err) {
+        onError: err => {
           console.error('PayPal error', err);
           alert("Une erreur est survenue lors du paiement PayPal. Réessaye plus tard.");
         }
       }).render('#paypal-button-container');
+
+      // Désactive le bouton si showPayment = false
+      if (!isPaymentActive) {
+        paypalContainer.style.pointerEvents = 'none';
+        paypalContainer.style.opacity = '0.4';
+        paypalMsg.textContent = "⚠️ Validez votre adresse pour activer le paiement PayPal.";
+      } else {
+        paypalContainer.style.pointerEvents = 'auto';
+        paypalContainer.style.opacity = '1';
+        paypalMsg.textContent = "✅ Vous pouvez maintenant payer avec PayPal.";
+      }
     });
   </script>
 {% endblock %}
-
