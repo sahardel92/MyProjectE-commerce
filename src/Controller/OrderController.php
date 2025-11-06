@@ -16,7 +16,6 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class OrderController extends AbstractController
 {
-    // ✅ Route principale du checkout
     #[Route('/order', name: 'app_order', methods: ['GET','POST'])]
     public function index(
         Request $request,
@@ -24,48 +23,54 @@ final class OrderController extends AbstractController
         ProductRepository $productRepository,
         CityRepository $cityRepository
     ): Response {
-        // 🛒 Récupération du panier depuis la session
+        //  Récupération du panier depuis la session
         $cart = $session->get('cart', []);
         $cartWithData = [];
 
         foreach ($cart as $id => $quantity) {
-            $cartWithData[] = [
-                'product' => $productRepository->find($id),
-                'quantity' => $quantity
-            ];
+            $product = $productRepository->find($id);
+            if ($product) {
+                $cartWithData[] = [
+                    'product' => $product,
+                    'quantity' => $quantity,
+                ];
+            }
         }
 
-        // 💰 Calcul du total
-        $total = array_sum(array_map(fn($item) =>
-            $item['product']->getPrice() * $item['quantity'], $cartWithData));
+        //  Calcul du total
+        $total = array_sum(array_map(
+            fn($item) => $item['product']->getPrice() * $item['quantity'],
+            $cartWithData
+        ));
 
-        // 🏙️ Liste des villes pour le select
+        //  Liste des villes pour le select
         $cities = $cityRepository->findAll();
 
-        // 🧾 Création du formulaire
+        //  Création du formulaire
         $order = new Order();
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
 
-        // 🚦 Gestion du formulaire
-        if ($form->isSubmitted() && $form->isValid()) {
-            // ✅ Enregistre les infos de livraison
-            $session->set('delivery_data', $form->getData());
+        // 🧩 Vérification du formulaire
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                // ✅ Formulaire valide → on enregistre les infos
+                $session->set('delivery_data', $form->getData());
 
-            // ✅ Message de confirmation
-            $this->addFlash('success', 'Adresse validée !');
+                $this->addFlash('success', '✅ Adresse validée ! Vous pouvez maintenant procéder au paiement.');
 
-            // ✅ Redirige vers la même page avec ?payment=1 pour afficher PayPal
-            return $this->redirectToRoute('app_order', ['payment' => 1]);
-        } elseif ($form->isSubmitted()) {
-            // ⚠️ Si formulaire invalide
-            $this->addFlash('error', 'Veuillez remplir tous les champs obligatoires.');
+                // Redirection propre vers la page avec le paiement visible
+                return $this->redirectToRoute('app_order', ['payment' => 1]);
+            } else {
+                // ❌ Formulaire invalide → message d’erreur
+                $this->addFlash('error', '⚠️ Pour accéder au paiement, veuillez remplir tous les champs obligatoires.');
+            }
         }
 
-        // 💳 Active le paiement si ?payment=1 est présent dans l’URL
+
+        //  Affiche le module PayPal uniquement après validation
         $showPayment = $request->query->get('payment') == 1;
 
-        // 🖼️ Affiche la vue
         return $this->render('order/index.html.twig', [
             'form' => $form->createView(),
             'items' => $cartWithData,
@@ -75,18 +80,16 @@ final class OrderController extends AbstractController
         ]);
     }
 
-    // ✅ API pour récupérer les frais de livraison selon la ville
     #[Route('/city/{id}/shipping/cost', name: 'app_city_shipping_cost', methods: ['GET'])]
     public function cityShippingCost(City $city): JsonResponse
     {
         return new JsonResponse([
             'status' => 200,
             'message' => 'ok',
-            'content' => $city->getShippingCost()
+            'content' => $city->getShippingCost(),
         ]);
     }
 
-    // ✅ Page de confirmation après paiement réussi
     #[Route('/order/confirm', name: 'app_order_confirm')]
     public function confirm(SessionInterface $session): Response
     {

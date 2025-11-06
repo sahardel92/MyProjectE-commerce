@@ -10,15 +10,14 @@
       <div class="card shadow-sm p-4">
         <h2 class="mb-4">📦 Informations de livraison</h2>
 
-        {% for message in app.flashes('error') %}
-          <div class="alert alert-danger">{{ message }}</div>
+        {# ✅ Messages flash succès/erreur #}
+        {% for label, messages in app.flashes %}
+          {% for message in messages %}
+            <div class="alert alert-{{ label == 'error' ? 'danger' : 'success' }}" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
         {% endfor %}
-
-        {% if showPayment %}
-          <div class="alert alert-success mb-4">
-            ✅ Adresse validée ! Vous pouvez maintenant procéder au paiement.
-          </div>
-        {% endif %}
 
         {{ form_start(form, {
             action: path('app_order'),
@@ -26,17 +25,45 @@
             attr: { id: 'order-form', novalidate: 'novalidate' }
         }) }}
           <div class="row g-3">
-            {{ form_widget(form) }}
+            <div class="col-md-6">
+              {{ form_label(form.firstName) }}
+              {{ form_widget(form.firstName) }}
+              {{ form_errors(form.firstName) }}
+            </div>
+
+            <div class="col-md-6">
+              {{ form_label(form.lastName) }}
+              {{ form_widget(form.lastName) }}
+              {{ form_errors(form.lastName) }}
+            </div>
+
+            <div class="col-md-6">
+              {{ form_label(form.phone) }}
+              {{ form_widget(form.phone) }}
+              {{ form_errors(form.phone) }}
+            </div>
+
+            <div class="col-md-12">
+              {{ form_label(form.adresse) }}
+              {{ form_widget(form.adresse) }}
+              {{ form_errors(form.adresse) }}
+            </div>
+
+            <div class="col-md-6">
+              {{ form_label(form.city) }}
+              {{ form_widget(form.city) }}
+              {{ form_errors(form.city) }}
+            </div>
           </div>
 
           <div class="mt-4 text-end">
             <button type="submit" class="btn btn-primary btn-lg" id="continue-btn">
-              {{ showPayment ? 'Modifier l’adresse' : '✅ Continuer' }}
+              {{ showPayment ? 'Modifier l’adresse' : '✅ Continuer vers le paiement' }}
             </button>
           </div>
         {{ form_end(form) }}
 
-        <!-- 🛒 Détail des articles -->
+        <!--  Détail des articles -->
         <h4 class="mt-5">🛒 Vos articles</h4>
         <ul class="list-group mb-3">
           {% for item in items %}
@@ -51,7 +78,7 @@
       </div>
     </div>
 
-    <!-- 📊 Résumé commande -->
+    <!--  Résumé commande -->
     <div class="col-md-4">
       <div class="card shadow-sm p-4">
         <h4 class="mb-3">🧾 Résumé</h4>
@@ -75,10 +102,10 @@
 
         <hr>
 
-        <!-- 💳 Bouton PayPal toujours visible mais désactivé -->
+        <!-- 💳 PayPal -->
         <div class="text-center">
-          <div id="paypal-button-container" class="opacity-50"></div>
-          <small id="paypal-msg" class="text-muted">⚠️ Validez votre adresse pour activer le paiement PayPal.</small>
+          <div id="paypal-button-container"></div>
+          <small id="paypal-msg" class="d-block mt-2 text-muted"></small>
         </div>
       </div>
     </div>
@@ -126,7 +153,6 @@
       const paypalMsg = document.getElementById('paypal-msg');
       const isPaymentActive = "{{ showPayment ? '1' : '0' }}" === '1';
 
-      // Rendu du bouton PayPal
       paypal.Buttons({
         createOrder: (data, actions) => {
           let totalText = document.getElementById("grand-total").textContent.replace("€", "").trim();
@@ -147,7 +173,6 @@
         }
       }).render('#paypal-button-container');
 
-      // Désactive le bouton si showPayment = false
       if (!isPaymentActive) {
         paypalContainer.style.pointerEvents = 'none';
         paypalContainer.style.opacity = '0.4';
