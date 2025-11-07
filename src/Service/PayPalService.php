@@ -2,26 +2,43 @@
 
 namespace App\Service;
 
-use PayPal\Auth\OAuthTokenCredential;
-use PayPal\Rest\ApiContext;
+use PayPalCheckoutSdk\Core\PayPalHttpClient;
+use PayPalCheckoutSdk\Core\SandboxEnvironment;
+use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
+use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 
 class PayPalService
 {
-    private ApiContext $apiContext;
+    private $client;
 
-    public function __construct(string $clientId, string $clientSecret, string $mode)
+    public function __construct()
     {
-        $this->apiContext = new ApiContext(
-            new OAuthTokenCredential($clientId, $clientSecret)
+        $environment = new SandboxEnvironment(
+            $_ENV['PAYPAL_CLIENT_ID'],
+            $_ENV['PAYPAL_CLIENT_SECRET']
         );
-
-        $this->apiContext->setConfig([
-            'mode' => $mode, // sandbox ou live
-        ]);
+        $this->client = new PayPalHttpClient($environment);
     }
 
-    public function getApiContext(): ApiContext
+    public function createOrder(float $amount, string $currency = 'EUR')
     {
-        return $this->apiContext;
+        $request = new OrdersCreateRequest();
+        $request->body = [
+            'intent' => 'CAPTURE',
+            'purchase_units' => [[
+                'amount' => [
+                    'currency_code' => $currency,
+                    'value' => number_format($amount, 2, '.', ''),
+                ],
+            ]],
+        ];
+
+        return $this->client->execute($request);
+    }
+
+    public function captureOrder(string $orderId)
+    {
+        $request = new OrdersCaptureRequest($orderId);
+        return $this->client->execute($request);
     }
 }
