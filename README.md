@@ -1,10 +1,17 @@
 # 🛍️ LilyShop — Projet E-Commerce Symfony
 
+![PHP Version](https://img.shields.io/badge/PHP-8.2-blue)
+![Symfony](https://img.shields.io/badge/Symfony-7.0-black)
+![PayPal](https://img.shields.io/badge/PayPal-Integration-003087)
+![Google OAuth](https://img.shields.io/badge/Google%20Login-OAuth-success)
+![Status](https://img.shields.io/badge/Status-Active-success)
+
 LilyShop est une application e-commerce développée avec Symfony 7, permettant la gestion complète de produits, catégories, sous-catégories, panier, avis clients, moteur de recherche et espace administrateur.
 
 Projet réalisé dans le cadre de la formation *Full-Stack Developer — Interface3*.
 
 ---
+
 
 ## 🚀 Fonctionnalités principales
 
