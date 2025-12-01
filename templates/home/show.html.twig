@@ -34,32 +34,44 @@
     <hr class="my-4">
         {# section dial avis dial clients #}
 
-<h3>Avis des clients</h3>
+    <h3 class="mt-4 mb-3">Avis des clients</h3>
 
-{% if reviews is not empty %}
-    {% for review in reviews %}
-        <div class="card mb-3">
-            <div class="card-body">
-            {# smiya dial client li ktb review #}
+    {% if reviews is not empty %}
+        {% for review in reviews %}
+            <div class="review-card">
 
-                <strong>{{ review.user.firstName }} {{ review.user.lastName }}</strong>
-                {# notation b njoum ⭐ #}
-                <span class="text-warning">
-                    {% for i in 1..review.rating %}
-                        ⭐
-                    {% endfor %}
-                </span>
-                {# contenu dial review #}
-                <p>{{ review.content }}</p>
-                {# date w wa9t fayn tkteb #}
+            <div class="review-header">
+                <!-- Avatar avec initiale -->
+                <div class="review-avatar">
+                    {{ review.user.firstName|first|upper }}
+                </div>
 
-                <small class="text-muted">Publié le {{ review.createdAt|date('d/m/Y H:i') }}</small>
+                <div>
+                    <strong>{{ review.user.firstName }} {{ review.user.lastName }}</strong>
+
+                    <div class="review-stars">
+        {% for i in 1..5 %}
+            {% if i <= review.rating %}
+                <i class="fa fa-star text-warning"></i>
+            {% else %}
+                <i class="fa-regular fa-star text-warning"></i>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+                </div>
             </div>
-        </div>
-    {% endfor %}
-{% else %}
-    <p>Aucun avis pour ce produit. Soyez le premier à en écrire un !</p>
-{% endif %}
+
+            <p>{{ review.content }}</p>
+
+            <div class="review-date">
+                Publié le {{ review.createdAt|date('d/m/Y H:i') }}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">Aucun avis pour ce produit. Soyez le premier à en écrire un !</p>
+    {% endif %}
 
 
     <hr class="my-4">

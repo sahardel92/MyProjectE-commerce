@@ -1,91 +1,120 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Checkout - LilyShop{% endblock %}
+{% block title %}Paiement - LilyShop{% endblock %}
 
 {% block body %}
 <div class="container my-5">
-  <div class="row">
-    <!-- 📝 Formulaire livraison -->
-    <div class="col-md-8">
-      <div class="card shadow-sm p-4">
-        <h2 class="mb-4">📦 Informations de livraison</h2>
 
-        {# ✅ Messages flash succès/erreur #}
+  <div class="row g-4">
+
+  
+    <!--  FORMULAIRE DE LIVRAISON -->
+    
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm p-4 rounded-4">
+
+        <h2 class="fw-bold mb-4" style="font-size: 1.6rem;">Informations de livraison</h2>
+
         {% for label, messages in app.flashes %}
           {% for message in messages %}
-            <div class="alert alert-{{ label == 'error' ? 'danger' : 'success' }}" role="alert">
+            <div class="alert alert-{{ label == 'error' ? 'danger' : 'success' }} mt-2">
               {{ message }}
             </div>
           {% endfor %}
         {% endfor %}
 
         {{ form_start(form, {
-            action: path('app_order'),
-            method: 'POST',
-            attr: { id: 'order-form', novalidate: 'novalidate' }
+          action: path('app_order'),
+          method: 'POST',
+          attr: { novalidate: 'novalidate' }
         }) }}
-          <div class="row g-3">
-            <div class="col-md-6">
-              {{ form_label(form.firstName) }}
-              {{ form_widget(form.firstName) }}
-              {{ form_errors(form.firstName) }}
-            </div>
 
-            <div class="col-md-6">
-              {{ form_label(form.lastName) }}
-              {{ form_widget(form.lastName) }}
-              {{ form_errors(form.lastName) }}
-            </div>
+        <div class="row g-3">
 
-            <div class="col-md-6">
-              {{ form_label(form.phone) }}
-              {{ form_widget(form.phone) }}
-              {{ form_errors(form.phone) }}
-            </div>
-
-            <div class="col-md-12">
-              {{ form_label(form.adresse) }}
-              {{ form_widget(form.adresse) }}
-              {{ form_errors(form.adresse) }}
-            </div>
-
-            <div class="col-md-6">
-              {{ form_label(form.city) }}
-              {{ form_widget(form.city) }}
-              {{ form_errors(form.city) }}
-            </div>
+          <div class="col-md-6">
+            {{ form_label(form.firstName) }}
+            {{ form_widget(form.firstName, {'attr': {'class': 'form-control rounded-3'}}) }}
+            {{ form_errors(form.firstName) }}
           </div>
 
-          <div class="mt-4 text-end">
-            <button type="submit" class="btn btn-primary btn-lg" id="continue-btn">
-              {{ showPayment ? 'Modifier l’adresse' : '✅ Continuer vers le paiement' }}
-            </button>
+          <div class="col-md-6">
+            {{ form_label(form.lastName) }}
+            {{ form_widget(form.lastName, {'attr': {'class': 'form-control rounded-3'}}) }}
+            {{ form_errors(form.lastName) }}
           </div>
+
+          <div class="col-md-6">
+            {{ form_label(form.phone) }}
+            {{ form_widget(form.phone, {'attr': {'class': 'form-control rounded-3'}}) }}
+            {{ form_errors(form.phone) }}
+          </div>
+
+          <div class="col-md-12">
+            {{ form_label(form.adresse) }}
+            {{ form_widget(form.adresse, {'attr': {'class': 'form-control rounded-3'}}) }}
+            {{ form_errors(form.adresse) }}
+          </div>
+
+          <div class="col-md-6">
+            {{ form_label(form.city) }}
+            {{ form_widget(form.city, {'attr': {'class': 'form-select rounded-3'}}) }}
+            {{ form_errors(form.city) }}
+          </div>
+
+        </div>
+
+        <button class="btn btn-primary w-100 py-3 mt-4 rounded-4">
+          {{ showPayment ? 'Modifier l’adresse' : 'Continuer vers le paiement' }}
+        </button>
+
         {{ form_end(form) }}
 
-        <!--  Détail des articles -->
-        <h4 class="mt-5">🛒 Vos articles</h4>
-        <ul class="list-group mb-3">
+        <!-- Articles -->
+        <h4 class="fw-bold mt-5 mb-3">Vos articles</h4>
+
+        <ul class="list-group rounded-4">
           {% for item in items %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              {{ item.product.name }} (x{{ item.quantity }})
-              <span>{{ (item.product.price * item.quantity)|number_format(2, ',', ' ') }} €</span>
+            <li class="list-group-item d-flex justify-content-between align-items-center border-0 border-bottom">
+
+              <div class="d-flex align-items-center">
+                {% if item.product.image %}
+                  <img src="{{ asset('uploads/images/' ~ item.product.image) }}" 
+                      alt="{{ item.product.name }}" 
+                      style="width:55px; height:55px; object-fit:cover;" 
+                      class="rounded me-3">
+                {% endif %}
+                <div>
+                  <strong>{{ item.product.name }}</strong>
+                  <small class="text-muted d-block">(x{{ item.quantity }})</small>
+                </div>
+              </div>
+
+              <span class="fw-semibold">
+                {{ (item.product.price * item.quantity)|number_format(2, ',', ' ') }} €
+              </span>
+
             </li>
           {% else %}
-            <li class="list-group-item text-muted">Votre panier est vide.</li>
+            <li class="list-group-item text-center text-muted">
+              Votre panier est vide.
+            </li>
           {% endfor %}
         </ul>
+
       </div>
     </div>
 
-    <!--  Résumé commande -->
+    
+    <!--     RÉSUMÉ COMMANDE       -->
+    
     <div class="col-md-4">
-      <div class="card shadow-sm p-4">
-        <h4 class="mb-3">🧾 Résumé</h4>
+      <div class="card border-0 shadow-sm p-4 rounded-4">
+
+        <h4 class="fw-bold mb-3">Résumé</h4>
 
         <div class="d-flex justify-content-between mb-2">
           <span>Produits</span>
-          <strong id="product-total">{{ total|number_format(2, ',', ' ') }} €</strong>
+          <strong>{{ total|number_format(2, ',', ' ') }} €</strong>
         </div>
 
         <div class="d-flex justify-content-between mb-2">
@@ -95,93 +124,98 @@
 
         <hr>
 
-        <div class="d-flex justify-content-between fs-5">
+        <div class="d-flex justify-content-between fs-5 mb-3">
           <span>Total à payer</span>
-          <strong id="grand-total" class="text-success">{{ total|number_format(2, ',', ' ') }} €</strong>
+          <strong id="grand-total" class="text-success">
+            {{ total|number_format(2, ',', ' ') }} €
+          </strong>
         </div>
 
-        <hr>
-
-        <!-- 💳 PayPal -->
+        <!-- PAYPAL ALWAYS VISIBLE -->
         <div class="text-center">
           <div id="paypal-button-container"></div>
           <small id="paypal-msg" class="d-block mt-2 text-muted"></small>
         </div>
+
       </div>
     </div>
+
   </div>
+
 </div>
 {% endblock %}
 
 {% block javascripts %}
-  {{ parent() }}
+{{ parent() }}
 
-  <!-- ⚡ Mise à jour du coût de livraison -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const citySelector = document.querySelector("#order_city");
-      const productTotal = parseFloat("{{ total }}");
-      const shippingCostEl = document.getElementById("shipping-cost");
-      const grandTotalEl = document.getElementById("grand-total");
+<!-- Coût livraison -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const citySelector = document.querySelector("#order_city");
+  const productTotal = parseFloat("{{ total }}");
+  const shippingCostEl = document.getElementById("shipping-cost");
+  const grandTotalEl = document.getElementById("grand-total");
 
-      async function updateShipping(cityId) {
-        try {
-          const response = await fetch(`/city/${cityId}/shipping/cost`);
-          const data = await response.json();
-          if (data.status === 200) {
-            const shipping = parseFloat(data.content);
-            shippingCostEl.textContent = `${shipping.toFixed(2)} €`;
-            grandTotalEl.textContent = `${(productTotal + shipping).toFixed(2)} €`;
-          }
-        } catch {
-          shippingCostEl.textContent = "Erreur...";
-        }
+  async function updateShipping(cityId) {
+    try {
+      const response = await fetch(`/city/${cityId}/shipping/cost`);
+      const data = await response.json();
+      if (data.status === 200) {
+        const shipping = parseFloat(data.content);
+        shippingCostEl.textContent = `${shipping.toFixed(2)} €`;
+        grandTotalEl.textContent = `${(productTotal + shipping).toFixed(2)} €`;
       }
+    } catch {
+      shippingCostEl.textContent = "Erreur...";
+    }
+  }
 
-      if (citySelector) {
-        updateShipping(citySelector.value);
-        citySelector.addEventListener("change", (e) => updateShipping(e.target.value));
-      }
-    });
-  </script>
+  if (citySelector) {
+    updateShipping(citySelector.value);
+    citySelector.addEventListener("change", (e) => updateShipping(e.target.value));
+  }
+});
+</script>
 
-  <!-- 💳 Script PayPal -->
-  <script src="https://www.paypal.com/sdk/js?client-id=ARIlNMxxayV2gxvOkVOQTubAlffwfGmkqcZU-C3-0_xJCpUa5uAMDKGYuSAj5wHYeOUAj4bUV4Lory0v&currency=EUR"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const paypalContainer = document.getElementById('paypal-button-container');
-      const paypalMsg = document.getElementById('paypal-msg');
-      const isPaymentActive = "{{ showPayment ? '1' : '0' }}" === '1';
+<!-- SCRIPT PAYPAL ORIGINAL -->
+<script src="https://www.paypal.com/sdk/js?client-id=ARIlNMxxayV2gxvOkVOQTubAlffwfGmkqcZU-C3-0_xJCpUa5uAMDKGYuSAj5wHYeOUAj4bUV4Lory0v&currency=EUR"></script>
 
-      paypal.Buttons({
-        createOrder: (data, actions) => {
-          let totalText = document.getElementById("grand-total").textContent.replace("€", "").trim();
-          totalText = totalText.replace(/\s/g, '');
-          return actions.order.create({
-            purchase_units: [{ amount: { value: totalText } }]
-          });
-        },
-        onApprove: (data, actions) => {
-          return actions.order.capture().then(details => {
-            alert("✅ Paiement réussi, merci " + (details.payer.name?.given_name || 'client') + " !");
-            window.location.href = "/order/confirm";
-          });
-        },
-        onError: err => {
-          console.error('PayPal error', err);
-          alert("Une erreur est survenue lors du paiement PayPal. Réessaye plus tard.");
-        }
-      }).render('#paypal-button-container');
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const paypalContainer = document.getElementById('paypal-button-container');
+  const paypalMsg = document.getElementById('paypal-msg');
+  const isPaymentActive = "{{ showPayment ? '1' : '0' }}" === '1';
 
-      if (!isPaymentActive) {
-        paypalContainer.style.pointerEvents = 'none';
-        paypalContainer.style.opacity = '0.4';
-        paypalMsg.textContent = "⚠️ Validez votre adresse pour activer le paiement PayPal.";
-      } else {
-        paypalContainer.style.pointerEvents = 'auto';
-        paypalContainer.style.opacity = '1';
-        paypalMsg.textContent = "✅ Vous pouvez maintenant payer avec PayPal.";
-      }
-    });
-  </script>
+  paypal.Buttons({
+    createOrder: (data, actions) => {
+      let totalText = document.getElementById("grand-total").textContent.replace("€", "").trim();
+      totalText = totalText.replace(/\s/g, '');
+
+      return actions.order.create({
+        purchase_units: [{ amount: { value: totalText } }]
+      });
+    },
+    onApprove: (data, actions) => {
+      return actions.order.capture().then(details => {
+        alert("✅ Paiement réussi, merci " + (details.payer.name?.given_name || 'client') + " !");
+        window.location.href = "/order/confirm";
+      });
+    },
+    onError: err => {
+      console.error('PayPal error', err);
+      alert("Une erreur est survenue lors du paiement PayPal. Réessaye plus tard.");
+    }
+  }).render('#paypal-button-container');
+
+  // Activation / Désactivation visuelle
+  if (!isPaymentActive) {
+    paypalContainer.style.opacity = "0.5";
+    paypalMsg.textContent = "⚠️ Validez votre adresse pour activer PayPal.";
+  } else {
+    paypalContainer.style.opacity = "1";
+    paypalMsg.textContent = "✅ Vous pouvez payer avec PayPal.";
+  }
+});
+</script>
+
 {% endblock %}

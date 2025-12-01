@@ -3,106 +3,124 @@
 {% block title %}Mon Panier - LilyShop{% endblock %}
 
 {% block body %}
-<div class="container my-4">
-  <h1 class="mb-4">🛍️ Mon panier</h1>
+<div class="container my-5">
 
-  <div class="row">
-    <!-- ==================== Partie gauche : tableau produits ==================== -->
-    <div class="col-md-8">
-      <div class="table-responsive">
-        <table class="table table-striped align-middle">
-          <thead class="table-dark">
-            <tr>
-              <th>Produit</th>
-              <th>Prix unitaire</th>
-              <th>Quantité</th>
-              <th>Total</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for item in items %}
-              <tr>
-                <!-- 📌 Nom produit -->
-                <td>
-                  <strong>{{ item.product.name }}</strong><br>
-                  <small class="text-muted">
-                    {{ item.product.description|slice(0, 40) ~ '...' }}
-                  </small>
-                </td>
+    <h1 class="mb-4 fw-bold">🛍️ Mon panier</h1>
 
-                <!-- 💰 Prix unitaire -->
-                <td>{{ item.product.price|number_format(2, ',', ' ') }} €</td>
+    <div class="row g-4">
 
-                <!-- 🔢 Contrôle quantité (+ et -) -->
-                <td>
-                  <div class="d-flex align-items-center">
-                    <!-- bouton ➖ -->
-                    <a href="{{ path('app_cart_decrease', {'id': item.product.id}) }}" 
-                       class="btn btn-outline-secondary btn-sm me-2">➖</a>
+        <!-- ==================== PRODUITS ==================== -->
+        <div class="col-md-8">
 
-                    <span class="fw-bold">{{ item.quantity }}</span>
-
-                    <!-- bouton ➕ -->
-                    <a href="{{ path('app_cart_add', {'id': item.product.id}) }}" 
-                       class="btn btn-outline-secondary btn-sm ms-2">➕</a>
-                  </div>
-                </td>
-
-                <!-- 🧾 Total de la ligne -->
-                <td>
-                  <strong>
-                    {{ (item.product.price * item.quantity)|number_format(2, ',', ' ') }} €
-                  </strong>
-                </td>
-
-                <!-- 🗑️ Supprimer -->
-                <td>
-                  <a href="{{ path('app_cart_product_remove', {'id': item.product.id}) }}" 
-                     class="btn btn-danger btn-sm">
-                    🗑️ Supprimer
-                  </a>
-                </td>
-              </tr>
+            {% if items is empty %}
+                <div class="alert alert-info text-center p-4">
+                    Votre panier est vide 😢<br>
+                    <a href="{{ path('app_home') }}" class="btn btn-primary mt-3">🛒 Continuer mes achats</a>
+                </div>
             {% else %}
-              <!-- 🕳️ Si panier vide -->
-              <tr>
-                <td colspan="5" class="text-center text-muted">
-                  Votre panier est vide 😢
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
 
-    <!-- ==================== Partie droite : résumé ==================== -->
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">📦 Résumé</h5>
+                {% for item in items %}
+                <div class="card mb-3 shadow-sm border-0 rounded-4 p-3">
 
-          <!-- 🧮 Compter les articles -->
-          {% set totalArticles = 0 %}
-          {% for item in items %}
-            {% set totalArticles = totalArticles + item.quantity %}
-          {% endfor %}
+                    <div class="row g-3 align-items-center">
 
-          <p>Sous-total ({{ totalArticles }} article{{ totalArticles > 1 ? 's' : '' }})</p>
-          <h4 class="fw-bold text-success">
-            {{ totalProduits|number_format(2, ',', ' ') }} €
-          </h4>
+                        <!-- IMAGE PRODUIT -->
+                        <div class="col-3">
+                            <img src="{{ asset('uploads/images/' ~ item.product.image) }}"
+                                 alt="{{ item.product.name }}"
+                                 class="img-fluid rounded-3"
+                                 style="object-fit: cover; height: 100px;">
+                        </div>
 
-          <hr>
+                        <!-- INFORMATIONS PRODUIT -->
+                        <div class="col-5">
+                            <h5 class="mb-1 fw-semibold">{{ item.product.name }}</h5>
+                            <small class="text-muted d-block">
+                                {{ item.product.description|slice(0, 50) ~ '...' }}
+                            </small>
 
-          <!-- Boutons d’actions -->
-          <a href="{{ path('app_order') }}" class="btn btn-warning w-100 mb-2">✅ Passer la commande</a>
-          <a href="{{ path('app_home') }}" class="btn btn-outline-secondary w-100">🛒 Continuer mes achats</a>
-          <a href="{{ path('app_cart_remove') }}" class="btn btn-danger w-100 mt-2">🗑️ Vider mon panier</a>
+                            <!-- PRIX UNITAIRE -->
+                            <div class="text-primary fw-bold mt-2">
+                                {{ item.product.price|number_format(2, ',', ' ') }} €
+                            </div>
+                        </div>
+
+                        <!-- QUANTITÉ & TOTAL -->
+                        <div class="col-4 text-end">
+
+                            <!-- BOUTONS QUANTITÉ -->
+                            <div class="d-flex justify-content-end mb-2">
+                                <a href="{{ path('app_cart_decrease', {'id': item.product.id}) }}"
+                                   class="btn btn-outline-secondary btn-sm rounded-circle me-2">−</a>
+
+                                <span class="fw-bold fs-5">{{ item.quantity }}</span>
+
+                                <a href="{{ path('app_cart_add', {'id': item.product.id}) }}"
+                                   class="btn btn-outline-secondary btn-sm rounded-circle ms-2">+</a>
+                            </div>
+
+                            <!-- TOTAL LIGNE -->
+                            <div class="fw-bold fs-5 text-success">
+                                {{ (item.product.price * item.quantity)|number_format(2, ',', ' ') }} €
+                            </div>
+
+                            <!-- SUPPRIMER -->
+                            <a href="{{ path('app_cart_product_remove', {'id': item.product.id}) }}"
+                               class="btn btn-link text-danger mt-2 p-0">
+                                🗑️ Supprimer
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+                {% endfor %}
+
+            {% endif %}
+
         </div>
-      </div>
+
+        <!-- ==================== RÉSUMÉ ==================== -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body">
+
+                    <h4 class="fw-bold mb-3">📦 Résumé</h4>
+
+                    {% set totalArticles = 0 %}
+                    {% for item in items %}
+                        {% set totalArticles = totalArticles + item.quantity %}
+                    {% endfor %}
+
+                    <p class="mb-1 text-muted">
+                        Sous-total ({{ totalArticles }} article{{ totalArticles > 1 ? 's' : '' }})
+                    </p>
+                    <h3 class="fw-bold text-success mb-3">
+                        {{ totalProduits|number_format(2, ',', ' ') }} €
+                    </h3>
+
+                    <hr>
+
+                    <a href="{{ path('app_order') }}"
+                       class="btn btn-primary w-100 py-2 fw-semibold mb-2">
+                       🧾 Passer la commande
+                    </a>
+
+                    <a href="{{ path('app_home') }}"
+                       class="btn btn-outline-secondary w-100 py-2 mb-2">
+                       🛒 Continuer mes achats
+                    </a>
+
+                    <a href="{{ path('app_cart_remove') }}"
+                       class="btn btn-danger w-100 py-2">
+                       🗑️ Vider mon panier
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
     </div>
-  </div>
+
 </div>
 {% endblock %}

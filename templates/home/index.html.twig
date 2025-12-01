@@ -5,56 +5,123 @@
 {% block body %}
 <div class="container my-5">
 
-    <!-- 🏠 Section Hero -->
-    <div class="p-5 mb-5 text-center bg-light rounded shadow-sm">
-        <h1 class="display-5 fw-bold">Bienvenue sur LilyShop 🛍️</h1>
-        <p class="lead text-muted">
-            Découvrez nos meilleures offres et les derniers produits ajoutés !
-        </p>
-        <a href="{{ path('app_home') }}" class="btn btn-success btn-lg mt-3">Voir les produits</a>
+    <!-- 🎉 SLIDER BLACK FRIDAY -->
+    <div id="homeCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+
+        <div class="carousel-inner rounded-4 shadow">
+
+            <div class="carousel-item active">
+                <img src="{{ asset('uploads/images/solde.jpg') }}" 
+                     class="d-block w-100 hero-img" 
+                     alt="Black Friday Solde">
+            </div>
+
+            <div class="carousel-item">
+                <img src="{{ asset('uploads/images/promo2.jpg') }}" 
+                     class="d-block w-100 hero-img" 
+                     alt="Promotions Black Friday">
+            </div>
+
+            <div class="carousel-item">
+                <img src="{{ asset('uploads/images/6dec.jpg') }}" 
+                     class="d-block w-100 hero-img" 
+                     alt="Offres Flash">
+            </div>
+
+        </div>
+
+        <button class="carousel-control-prev" type="button" 
+                data-bs-target="#homeCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+
+        <button class="carousel-control-next" type="button" 
+                data-bs-target="#homeCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+
     </div>
 
-    <!-- 🛒 Produits -->
+    <!-- 🌟 BANDEAU CATÉGORIES -->
+    <div class="categories-banner my-4">
+
+        <a class="cat-item" href="#">
+            <i class="fas fa-spa"></i>
+            Beauté
+        </a>
+
+        <a class="cat-item" href="#">
+            <i class="fas fa-book"></i>
+            Livres
+        </a>
+
+        <a class="cat-item" href="#">
+            <i class="fas fa-tshirt"></i>
+            Mode
+        </a>
+
+        <a class="cat-item" href="#">
+            <i class="fas fa-gamepad"></i>
+            Jeux
+        </a>
+
+        <a class="cat-item" href="#">
+            <i class="fas fa-mobile-alt"></i>
+            Électronique
+        </a>
+
+        <a class="cat-item" href="#">
+            <i class="fas fa-couch"></i>
+            Maison
+        </a>
+
+    </div>
+
+    <!-- 🛒 PRODUITS -->
     <h2 class="mb-4">🆕 Nos Produits</h2>
-    <div class="row g-4">
+
+    <!-- ⚡ NOUVELLE GRILLE PRODUITS -->
+    <div class="products-grid">
         {% for product in products %}
-            <div class="col-md-3">
-                <div class="card h-100 shadow-sm border-0">
 
-                    <!-- Image produit -->
-                    <a href="{{ path('app_home_product_show', {'id': product.id}) }}">
-                        <img src="{{ absolute_url(asset('uploads/images/' ~ product.image)) }}"  
-                            class="card-img-top p-3 bg-light"
-                                 alt="{{ product.name }}"
-                                 style="height: 200px; object-fit: contain;">
+            <div class="product-card">
 
+                <a href="{{ path('app_home_product_show', {'id': product.id}) }}">
+                    <img src="{{ asset('uploads/images/' ~ product.image) }}"  
+                         alt="{{ product.name }}">
+                </a>
+
+                <div class="card-body d-flex flex-column p-3">
+
+                    <a href="{{ path('app_home_product_show', {'id': product.id}) }}" 
+                       class="text-decoration-none text-dark">
+                        <h5 class="card-title">{{ product.name }}</h5>
                     </a>
 
-                    <div class="card-body d-flex flex-column">
-                        <a href="{{ path('app_home_product_show', {'id': product.id}) }}" 
-                           class="text-decoration-none text-dark">
-                            <h5 class="card-title">{{ product.name }}</h5>
-                        </a>
-                        <p class="card-text text-muted small">
-                            {{ product.description|slice(0, 50) }}...
-                        </p>
-                        <p class="fw-bold text-success mb-3">{{ product.price }} €</p>
-                        
-                        <a href="{{ path('app_cart_add', {'id': product.id}) }}" 
-                           class="btn btn-success mt-auto w-100">
-                           🛒 Ajouter au panier
-                        </a>
-                    </div>
+                    <p class="card-text text-muted small">
+                        {{ product.description|slice(0, 50) }}...
+                    </p>
+
+                    <p class="fw-bold text-success mb-3">{{ product.price }} €</p>
+
+                    <a href="{{ path('app_cart_add', {'id': product.id}) }}" 
+                       class="btn btn-success mt-auto w-100">
+                       🛒 Ajouter au panier
+                    </a>
+
                 </div>
             </div>
+
         {% else %}
             <p class="text-center text-muted">Aucun produit disponible pour le moment.</p>
         {% endfor %}
     </div>
 
-    <!-- 📌 Pagination Bootstrap -->
+    <!-- 📌 Pagination -->
     <div class="d-flex justify-content-center mt-5">
         {{ knp_pagination_render(products, '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig') }}
     </div>
+
 </div>
+
 {% endblock %}
